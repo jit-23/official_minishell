@@ -1,0 +1,490 @@
+
+void get_prompt(t_mini *bsh)
+{
+	char *directory;
+
+	directory = NULL;
+	directory = getcwd(directory, 1000);
+	bsh->prompt = ft_strjoin(directory, "$ ");
+	bsh->cmd_line = readline(bsh->prompt);
+	if (bsh->cmd_line && only_spaces(bsh->cmd_line))
+		add_history(bsh->cmd_line);
+	free(directory);
+}
+
+
+int main(int ac, char **av, char **env)
+{
+	t_mini bsh;
+
+	if (ac != 1)
+		return (1);
+	ft_memset(&bsh,  0, sizeof(t_mini));
+	bsh.env = env;
+	while(1)
+	{
+		get_prompt(&bsh);
+		if (bsh.cmd_line)
+		{
+			analise_cmd(bsh.cmd_line, &bsh);
+		}
+	}
+	return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@echo "\n"
+		@echo "${GREEN}//////////  ||  /////  ||    /////////  ||    || /////// \\       \\"
+		@echo "/   //   /  ||  /   /  ||    //         ||    || //      \\       \\"
+		@echo "/   //   /  ||  /   /  ||      ////     |||||||| ////    \\       \\"
+		@echo "/   //   /  ||  /   /  ||          ///  ||    || //      \\       \\ "
+		@echo "/   //   /  ||  /   /  ||    ////////   ||    || /////// \\////// \\//////${default_colour}"
+
+=====================================================================================================================
+
+	typedef struct s_token t_token;
+
+		t_stack	*ft_lstnew(int x)
+{
+	t_stack	*new_node;
+
+	new_node = malloc(sizeof(t_stack));
+	if (!new_node)
+		return (0);
+	new_node->x = x;
+	new_node->next = NULL;
+	return (new_node);
+}
+
+void	delete_lst(t_stack **head, int size)
+{
+	t_stack	*del;
+	int		i;
+
+	i = -1;
+	del = (*head);
+	while (++i < size)
+	{
+		del = del->next;
+		free(*head);
+		(*head) = del;
+	}
+}
+
+t_stack	*ft_lstlast(t_stack *head)
+{
+	t_stack	*tmp;
+
+	if (!head)
+		return (NULL);
+	tmp = head;
+	while (tmp->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	return (tmp);
+}
+
+int	lst_size(t_stack **head)
+{
+	t_stack	*node;
+	int		size;
+
+	if (!(*head))
+		return (0);
+	node = (*head);
+	size = 0;
+	while (node != NULL)
+	{
+		size++;
+		node = node->next;
+	}
+	return (size);
+}
+
+
+void analise_cmd_line(t_shell *shell, char *cmdline)
+{
+    
+}
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+typedef enum e_type
+{
+X	WORD = -1,         
+	XHEREDOC = -2,      
+	XDREDIREC = -3,     
+X	SPACE_BAR = ' ',
+	NEW_LINE = '\n',
+X	S_QUOTE = '\'',
+X	D_QUOTE = '\"',
+	SCAPE = '\\',
+X	ENV = '$',
+X	PIPE = '|',
+} t_type;
+
+
+
+
+/* 
+init_tree(t_shell *sh)
+{
+    sh->root;
+    t_cmd *cmd;
+    t_token *tmp;
+
+    tmp = sh->token_list->head;
+    cmd = init_exec(sh);
+    sh->root = cmd;
+    while(tmp) // go through the token
+    {
+        if (stop)
+        tmp = tmp->next;
+    }
+} */
+
+
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+
+/* t_cmd *init_exec(t_shell *sh)
+{
+    t_cmd *cmd;
+
+    cmd = (t_exec *)malloc(sizeof(t_exec));
+    cmd->type = _EXEC;
+    return ((t_cmd *)cmd);
+}
+
+t_cmd *init_redir(t_shell *sh)
+{
+    t_cmd   *cmd;
+
+    cmd = (t_redir *)malloc(sizeof(t_redir));
+    cmd->type = _EXEC;
+    return ((t_cmd *)cmd);
+}
+
+t_cmd *init_redir(t_shell *sh)
+{
+    t_cmd   *cmd;
+
+    cmd = (t_redir *)malloc(sizeof(t_redir));
+    cmd->type = _REDIR;
+    return ((t_cmd *)cmd);
+}
+
+t_cmd *init_pipe(t_shell *sh)
+{
+    t_cmd   *cmd;
+
+    cmd = (t_pipe *)malloc(sizeof(t_pipe));
+    cmd->type = _PIPE;
+    return ((t_cmd *)cmd);
+}
+
+
+void    init_tree(t_shell *sh)
+{
+    int type;
+
+    type = 
+} */
+
+void    init_tree(t_shell *sh, char *cmdl, t_token *head)
+{
+    //t_token **checker;
+    //*checker = &head;
+    t_token *head_tmp;
+    head_tmp = head;
+    /* while loop to check first node/ initial root? */
+    if(head_tmp->type == WORD)
+        sh->root = parse_exec(sh, &head_tmp);
+    /* while loop to check first node? */
+    
+    //printf("%p\n%s\n",head->next, head->token);
+    if (head->next)
+    {
+        printf("there is next\n");
+        create_branches(sh, &head_tmp, &sh->root);
+    }
+    return ;
+    t_pipe *pp;
+    t_exec *execute;
+    pp = (t_pipe *)sh->root;
+    execute = (t_exec *)pp->left;
+    printf("=================\n");
+    printf("%d\n", sh->root->type);
+    //printf("branch (PIPE(1))? = .%d.\n", sh->root->type);
+    //printf("branch (exec(2))? = .%d.\n",execute->type);
+   // function to create the rest of the tree? //
+    //executor
+    return ;
+}
+
+
+////////////////////////////
+int peek_whole_list(t_token *checker,char *find)
+{
+    t_token *tmp;
+    int i;
+    int flag;
+
+    flag = 0;
+    tmp = checker;
+    i = 0;
+    while(tmp)
+    {
+        flag = strncmp(tmp->token, find, ft_strlen(tmp->token));
+        if (flag == 1)
+            return (1);
+        tmp = tmp->next;
+    }
+    return (0);
+}
+
+
+    /* while(head){
+        printf("\033[0;34m");
+        printf("%s=%s\n", head->env_name, head->env_value);
+        printf("\033[0m");
+        
+        printf("%s\n", env[j++]);
+        head = head->next;
+    }
+     */
+
+	 void	fill_list(t_shell *shell, char *cmdl)
+{
+	int i;
+	int t_loops;
+	t_placing place;
+
+
+	t_loops = 0;
+	i = 0;
+	place = DEFAULT;
+	while(cmdl[i])
+	{
+		if 	(cmdl[i] == '\"')
+		{
+			shell->n_dquotes++;
+			if (shell->n_dquotes % 2)
+				place = IN_DQ;
+			i += get_quote(shell, place, '\"');
+		}
+		else if (cmdl[i] == '\'')
+		{
+			shell->n_squotes++;
+			if (shell->n_squotes % 2)
+				place = IN_SQ;
+			i +=  get_quote(shell, place, '\"');
+		}
+		else if (cmdl[i] && !special_char(cmdl[i]) && !is_space(cmdl[i]))
+			i += get_word(cmdl, i, shell, place);
+		else if(cmdl[i] && is_space(cmdl[i]))
+			i += get_space(cmdl, i, shell, place);
+		else if (cmdl[i] && cmdl[i] == '$')
+			i += get_env_var(cmdl, i, shell, place);
+		else if (cmdl[i] && cmdl[i] == '|')
+			i += get_pipe(shell, place);
+		else if (cmdl[i] && cmdl[i] == '>' || cmdl[i] == '<')
+			i += get_redirect_var(cmdl, i, shell, place);
+	}
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	int j;
+
+	j = i + 1;
+	char *env_var;
+	char *to_stick;
+	to_stick = (char *)s_malloc(sizeof(char) * 2);
+	to_stick[1] = '\0';
+	env_var = (char *)s_malloc(sizeof(char) * 2);
+	env_var[0] = '$';
+	env_var[1] = '\0';
+	while(cmdl[j] && !special_char(cmdl[j]) && !is_space(cmdl[j]))
+	{
+		to_stick[0] = cmdl[j];
+		env_var = ft_strjoin(env_var, to_stick);
+		j++;
+	}
+	add_to_list(sh->token_list, env_var, ENV, placing);
+	return (j - i);
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+	void	fill_first_list(t_shell *shell, char *cmdl)
+{
+	int i;
+	int t_loops;
+	t_placing place;
+
+
+	t_loops = 0;
+	i = 0;
+	place = DEFAULT;
+	while(cmdl[i])
+	{
+		if (cmdl[i] == '\"')
+		{
+			if (place == DEFAULT)
+			{
+				i+= get_quote(shell, place, '\"');
+				place = IN_DQ;
+			}
+			else if (place == IN_DQ)
+			{
+				place = DEFAULT;
+				i+= get_quote(shell, place, '\"');
+			}
+			else if (place == IN_SQ)
+				i+= get_quote(shell, place, '\"');
+		}
+		else if (cmdl[i] == '\'')
+		{
+			if (place == DEFAULT)
+			{
+				i += get_quote(shell, place, '\'');
+				place = IN_SQ;
+			}
+			else if (place == IN_DQ)
+			{
+				i+= get_quote(shell, place, '\'');
+			}
+			else if (place == IN_SQ)
+			{
+				place = DEFAULT;
+				i+= get_quote(shell, place, '\'');
+			}
+		}
+		else if (cmdl[i] && !special_char(cmdl[i]) && !is_space(cmdl[i]))
+			i += get_word(cmdl, i, shell, place);
+		else if(cmdl[i] && is_space(cmdl[i]))
+			i += get_space(cmdl, i, shell, place);
+		else if (cmdl[i] && cmdl[i] == '$')
+			i += get_env_var(cmdl, i, shell, place);
+		else if (cmdl[i] && cmdl[i] == '|')
+			i += get_pipe(shell, place);
+		else if (cmdl[i] && cmdl[i] == '>' || cmdl[i] == '<')
+			i += get_redirect_var(cmdl, i, shell, place);
+	}
+}
+
+t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
+{
+    printf("===exec parse function===\n");
+    t_token *token;
+    int i;
+
+    i = 0;
+    token = sh->token_list->head;
+    if (sh->token_list->head->prev == NULL)
+        sh->root = (t_cmd *)exec_struct;
+    while(token && (peek_token(token, 1, "|") == 0))
+    {
+        if (peek_token(token, 2 , " ", "\t") == 1)
+            token = token->next;
+        else
+        {
+            exec_struct->args[i] = ft_strdup(token->token);
+            token = token->next;
+            i++;
+        }
+    }
+    exec_struct->args[i] = NULL;
+    sh->token_list->head = token;
+    return ((t_cmd *)exec_struct);
+}
+
+
+t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
+{
+	t_cmd *branch_root;
+    int i;
+	t_token *token;
+
+	token = sh->token_list->head;
+    i = 0;
+    if (token->prev == NULL)
+        sh->root = (t_cmd *)exec_struct;
+	branch_root = (t_cmd *)exec_struct;
+	while(token && peek_token(token, 1, "|") == 0)
+    {
+		branch_root = parse_redir((t_cmd *)branch_root, token);
+        printf("................\n");
+		if (token->type == WORD)
+        	exec_struct->args[i++] = ft_strdup(token->token);
+        else
+			break ;
+		token = token->next;
+	}
+	printf("exec arg - .%s.\n", exec_struct->args[0]);
+    exec_struct->args[i] = NULL;
+    sh->token_list->head = token;
+    return ((t_cmd *)exec_struct);
+}
+
+
+/* t_cmd *parse_redir(t_cmd *branch_root, t_token *token)
+{
+	t_redir *ret;
+	t_redir *tmp;
+	t_redir *tmp2;
+
+	ret = (t_redir *)branch_root;
+	while(peek_token(token, 3, ">", ">>", "<"))
+	{
+		token = token->next;
+		tmp = init_redir(token);
+		if (ret->type == _EXEC)
+		{
+			tmp->cmd = (t_cmd *)ret;
+			ret = tmp;
+		}
+		else if (ret->type == _REDIR)
+		{
+			tmp2 = get_last_redir(branch_root);
+			tmp->cmd = tmp2->cmd;
+			tmp2->cmd = (t_cmd *)tmp;
+		}
+		token = token->next;
+	}
+	return ((t_cmd *)ret);
+} */
