@@ -43,7 +43,7 @@ struct s_cmd
 struct s_exec
 {
 	int type;
-	char **args;
+	char *args[20];
 };
 
 struct s_pipe
@@ -99,6 +99,7 @@ typedef struct s_token
 typedef struct s_lexer
 {
 	t_token *head;
+	t_token *official_head;
 	t_token *tail;
 	int			size;
 }t_lexer;
@@ -132,10 +133,12 @@ void	delete_env_lst(t_env *head, int size);
 int		lst_size_env(t_env *head);
 void	delete_token_lst(t_token *head, int size);
 int		lst_size_tokens(t_token *head);
+void delete_2d_array(char **a);
 
 /* DESTROY_ALL.C */
+void delete_tree(t_cmd *root);
 void delete_all(t_shell *shell);
-
+void clean_for_next_loop(t_shell *sh);
 
 
 /* LIST_UTILS.C */

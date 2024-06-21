@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 18:37:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/12 02:33:55 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/20 20:33:24 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,16 @@ void	delete_token_lst(t_token *head, int size)
 		
 		(head) = del;
 	}
+}
+
+void delete_2d_array(char **a)
+{
+	int i;
+
+	i  = 0;
+	if (!a)
+		return ;
+	while(a[i])
+		free(a[i++]);
+	free(a);
 }

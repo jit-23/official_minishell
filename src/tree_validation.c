@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 04:36:48 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/19 13:16:49 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/19 21:28:59 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char **get_absolute_executable(t_exec *executable, t_shell *sh)
 	while(!is_path_env(tmp->env_name))
 		tmp = tmp->next;
 	cmd = ft_strjoin("/", executable->args[0]); //  -  "/ls"
-	absolute_executables = s_malloc(ft_count(tmp->env_value, ':') + 1);
+	absolute_executables = ft_calloc(ft_count(tmp->env_value, ':') + 1,(ft_count(tmp->env_value, ':') + 1) * sizeof(char *));
 	while(sh->paths[i])
 	{
 		absolute_executables[i] = ft_strjoin(sh->paths[i], cmd);
@@ -56,8 +56,8 @@ char **get_absolute_executable(t_exec *executable, t_shell *sh)
 so now im trying to find it */
 void validate_exec(t_exec *executable_node, t_shell *sh)
 {
-	char	**absolute_executables;
 	int		i;
+	char	**absolute_executables;
 	char	*perfect_executable;
 
 	i = 0;
@@ -71,6 +71,7 @@ void validate_exec(t_exec *executable_node, t_shell *sh)
 		}
 		i++;
 	}
+	delete_2d_array(absolute_executables);
 	printf("%s: command not found\n", executable_node->args[0]);
 	sh->stop_iteration = 1;
 }

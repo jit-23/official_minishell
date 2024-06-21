@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/13 16:58:03 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:47:48 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ t_token *new_node(char *token, t_type type, t_placing placing) // prev e definid
 {
     t_token *new_node;
 	
-    new_node = (t_token *)ft_calloc(6 ,sizeof(t_token));
-	//printf("\t token - %s\n",token);
+    new_node = (t_token *)malloc(sizeof(t_token));
 	new_node->token = token;
 	new_node->type = type;
     new_node->placing = placing;
@@ -75,15 +74,12 @@ void	add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing
 	t_token *head;
 	t_token *prev;
 	t_token *last;
-	//printf("ADD_TO_LIST :\n");
-	//printf("word - %s\n",word);
-	//printf("type - %d\n",type);
-	//printf("placing - %u\n",placing);
 	if (!token_list->head)
 	{
 		
 		token_list->head = new_node(word, type, placing);
 		token_list->head->prev = NULL;
+		token_list->official_head = token_list->head;
 		return ;
 	}
 	last = ft_lstlast(token_list->head);

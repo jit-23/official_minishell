@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/19 13:00:28 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/20 20:35:39 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,32 +55,47 @@ static void print_vals(t_env *e, char **ev)
 	}	
 }
 
+static void  init_shell(t_shell *shell, char **ev)
+{
+	shell->ev = NULL;	
+	shell->env = NULL;	
+	shell->root = NULL;
+	shell->paths = NULL;
+	shell->prompt = NULL;
+	shell->cmd_line = NULL;	
+	shell->token_list = NULL;
+	shell->stop_iteration = 0;
+	shell->token_list = (t_lexer *)malloc( sizeof(t_lexer));
+	shell->token_list->head = NULL;
+	shell->token_list->official_head = NULL;
+	shell->ev = expand_env(shell, ev);
+}
+
 int main(int ac,char **av ,char **ev)
 {
 	t_shell shell;
 	if (ac != 1)
-    	return (1); // msg erro
-	shell.ev = expand_env(&shell,ev); //list of env var, separated the val and the designated name.
-	shell.paths = get_path(&shell);
-	while(1)
-    {
-    	get_prompt(&shell);
-		if (strncmp(shell.cmd_line, "exit", 4) == 0)
-		{
-			delete_env_lst(shell.ev, lst_size_env(shell.ev));
-			free(shell.prompt);
-			free(shell.cmd_line);
-			return 0;
-		}
-		if (shell.cmd_line)
-		    analise_cmd_line(&shell, shell.cmd_line);
-		free(shell.prompt);
-		free(shell.cmd_line);
-	}
-    return 0;
-}
+		return (1); // msg erro
 
-/* util to read 2d arrays */
+	//shell.paths = get_path(&shell);
+	/* - shell.paths = get_path(&shell); -> esta mal, era para confirmar se commands 
+	 eram validos, mas execve ja confiarma isso, mantenho 
+	 aqui por se acaso reutilizo alguma cena */ 
+	while(1)
+	{
+		init_shell(&shell, ev);
+		get_prompt(&shell);
+		if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
+		{
+			delete_all(&shell);
+    		return 0;
+		}
+	    if (shell.cmd_line)
+	        analise_cmd_line(&shell, shell.cmd_line);
+		delete_all(&shell);
+	}
+	return 0;
+}
 
 void print_loop(char **s)
 {

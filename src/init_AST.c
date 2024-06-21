@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 00:47:31 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/16 22:56:02 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/21 02:16:51 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,13 @@ t_exec *init_exec()
 {
     t_exec *exec;
 
-    exec = (t_exec *)malloc(sizeof(t_exec));
+    exec = (t_exec *)calloc(2, sizeof(t_exec));
     if (!exec)
     {
         ft_putstr_fd("error on malloc\n", 2);
         return (NULL);
     }
     exec->type = _EXEC;
-    exec->args = (char **)malloc(sizeof(char *) * 20);
     return (exec);
 }
 
@@ -99,27 +98,30 @@ t_redir *init_redir()
 {
 	t_redir *redir;
 
-	redir = ft_calloc(5, sizeof(t_redir));
+	redir = malloc(/* 5, */ sizeof(t_redir));
 	redir->type = _REDIR;
 	return (redir);	
 }
 
+
 t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 {
 	t_cmd *branch_root;
-    int i;
+    int		i;
+    int		j;
 
-    i = 0;
+	i = 0;
+	j = 0;
+	char *tmp;
 	t_token *prev;
-
 	prev = sh->token_list->head->prev;
 	branch_root = (t_cmd *)exec_struct;
 	while(sh->token_list->head && peek_token(sh->token_list->head, 1, "|") == 0)
     {
 		branch_root = parse_redir((t_cmd *)branch_root, sh, sh->token_list->head);
-		if (sh->token_list->head && sh->token_list->head->type == WORD)
-        	exec_struct->args[i++] = ft_strdup(sh->token_list->head->token);
-    	else
+		if (sh->token_list->head && sh->token_list->head->type == WORD ) // still CANOT handle single ordouble, but its easy, just make a function that can hanlde each sitaution SQ DQ and default, tokens already done. i just didnt bcs lazy...
+			exec_struct->args[i++] = ft_strdup(sh->token_list->head->token);
+		else
 			break ;
 		sh->token_list->head = sh->token_list->head->next;
 	}
@@ -176,11 +178,13 @@ static t_redir *fill_redir(char *s, int mode, t_shell *sh)
 }
 static t_redir *handle_redir_type(t_shell *sh)
 {
+	printf("hiii\n");
 	char *redir_type;
 	int redir_type_len;
 
-	redir_type_len = ft_strlen(redir_type);
 	redir_type = sh->token_list->head->token;
+	redir_type_len = ft_strlen(redir_type);
+	printf("redir_type_len = %d\n", redir_type_len);
 
 	t_redir *red;
 	if (strncmp(redir_type, ">" , redir_type_len) == 0)

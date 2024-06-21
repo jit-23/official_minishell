@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 20:01:30 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/19 13:00:03 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/21 01:38:33 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	fill_first_list(t_shell *shell, char *cmdl)
 		{
 			while(cmdl[i] == 32 || cmdl[i] == 9)
 				i++;
-			//i += get_space(cmdl, i, shell, place);
 		}
 		else if (cmdl[i] && cmdl[i] == '$')
 			i += get_env_var(cmdl, i, shell, place);
@@ -44,28 +43,29 @@ void	fill_first_list(t_shell *shell, char *cmdl)
 
 void	analise_cmd_line(t_shell *shell, char *cmdline)
 {
-	t_token *head;
 	t_cmd *tmp_root;
 
-	// trim edges on cmdline for = (' ' ; '\t');
-	shell->token_list = (t_lexer *)ft_calloc(3, sizeof(t_lexer));
+	
+	// trim edges on cmdline for = (' ' && '\t');
 	fill_first_list(shell, cmdline);
+
+	t_token *head;
 	head = shell->token_list->head;
-
-	/* while(head)
-	{
-		printf("===================\n");
-		printf("token   = %s.\n", head->token);
-		printf("Placing = %u.\n", head->placing);
-		printf("Type    = %d.\n", head->type);
-		head = head->next;
-	} */
-
+	// while(head)
+	//{
+	//	printf("===================\n");
+	//	printf("token   = %s.\n", head->token);
+	//	printf("Placing = %u.\n", head->placing);
+	//	printf("Type    = %d.\n", head->type);
+	//	head = head->next;
+	//}
 	init_AST(shell);
-	tmp_root = shell->root;
-	validate_tree(tmp_root, shell);
-	//print_tree(shell->root);
-	delete_all(shell);
+	//shell->stop_iteration = 0;
+	//tmp_root = shell->root;
+	//validate_tree(shell->root, shell);
+	
+	print_tree(shell->root);
+	//delete_all(shell);
 }	
 
 void print_tree(t_cmd *root)

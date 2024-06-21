@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 23:00:04 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/15 13:17:44 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:48:51 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,14 @@ int	get_word(char *cmdl, int i, t_shell *sh, t_placing placing)
 	j = -1;
 	count = count_word_size(cmdl, i, count, placing);
 	token = ft_calloc(count, sizeof(char) * (count + 1));
+	//token = malloc(/* count, */ sizeof(char) * (count + 1));
+	
 	while(++j < count)
 		token[j] = cmdl[i + j];
 	token[j] = '\0';
 	add_to_list(sh->token_list, token, WORD, placing);
 	return (count);
-}
+} 
 
 char *get_env_str(char *cmdl, int i)
 {
