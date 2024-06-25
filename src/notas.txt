@@ -488,3 +488,19 @@ t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 	}
 	return ((t_cmd *)ret);
 } */
+
+
+void    init_AST(t_shell *sh)
+{
+    if (sh->token_list->head->type == WORD)
+        exec_parse(sh, init_exec());
+	printf("after exec_parse\n");
+	printf("root type as the first iteration - %d\n", sh->root->type);
+	if (sh->token_list->head)
+	{
+		printf("more\n");
+		pipe_parse(sh, sh->root);
+	}
+	
+	return ;
+}

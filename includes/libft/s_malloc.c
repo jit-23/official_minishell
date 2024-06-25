@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:46:13 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/05/24 22:48:45 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/25 04:05:35 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void    *s_malloc(size_t bt)
     a = malloc(sizeof(bt));
     if (!a)
     {
-        ft_putstr_fd("error with malloc\n", 2);
+        ft_putstr_fd(2, "error with malloc\n");
         exit(1);
     }
     return (a);

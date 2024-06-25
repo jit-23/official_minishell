@@ -189,7 +189,11 @@ t_exec	*init_exec();
 int		peek_token(t_token *checker,int var_nbr, ...);
 t_redir *init_redir();
 //t_redir *check_redir(t_shell *sh,  t_token *node);
-t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh, t_token *token);
+t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh);
+
+/* CHECK_SYNTAX.C */
+int check_syntax(t_shell *sh);
+int check_pipe_sequence(t_token *token);
 
 
 #endif

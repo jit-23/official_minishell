@@ -6,17 +6,17 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 20:01:30 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/21 01:38:33 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/06/25 16:17:28 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
+/* \n && '//' */
 void	fill_first_list(t_shell *shell, char *cmdl)
 {
-	int i;
-	t_placing place;
-	
+	int			i;
+	t_placing	place;
+
 	i = 0;
 	place = DEFAULT;
 	while(cmdl[i])
@@ -43,30 +43,27 @@ void	fill_first_list(t_shell *shell, char *cmdl)
 
 void	analise_cmd_line(t_shell *shell, char *cmdline)
 {
-	t_cmd *tmp_root;
-
-	
+	//t_cmd *tmp_root;
 	// trim edges on cmdline for = (' ' && '\t');
 	fill_first_list(shell, cmdline);
-
-	t_token *head;
+	if (check_syntax(shell))
+		return ;
+/* 	t_token *head;
 	head = shell->token_list->head;
-	// while(head)
-	//{
-	//	printf("===================\n");
-	//	printf("token   = %s.\n", head->token);
-	//	printf("Placing = %u.\n", head->placing);
-	//	printf("Type    = %d.\n", head->type);
-	//	head = head->next;
-	//}
+	while(head)
+	{
+		printf("===================\n");
+		printf("token   = %s.\n", head->token);
+		printf("Placing = %u.\n", head->placing);
+		printf("Type    = %d.\n", head->type);
+		head = head->next;
+	} */
 	init_AST(shell);
-	//shell->stop_iteration = 0;
 	//tmp_root = shell->root;
-	//validate_tree(shell->root, shell);
-	
+	//printf("ROOT - %d\n", shell->root->type);
 	print_tree(shell->root);
 	//delete_all(shell);
-}	
+}
 
 void print_tree(t_cmd *root)
 {
@@ -83,7 +80,7 @@ void print_tree(t_cmd *root)
             printf("%d - args - %s\n",j ,ex->args[i]);
         j++;
 		printf("\n");
-    }
+	}
 	else if (root->type == _REDIR)
 	{
 		redir = (t_redir *)root;
@@ -92,6 +89,7 @@ void print_tree(t_cmd *root)
 	}
     else if (root->type == _PIPE)
     {
+		printf("root->type == %d\n", root->type);
         pp = (t_pipe *)root;
         printf("%d pipe - | \n", j);
         j++;

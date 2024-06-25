@@ -17,6 +17,7 @@ SRC_FILES:=  main.c \
 					destroy_utils.c\
 					destroy_all.c\
 					tree_validation.c\
+					check_syntax.c\
 #					init_tree.c\
 
 MAKE:= make -C
