@@ -98,9 +98,9 @@ typedef struct s_token
 
 typedef struct s_lexer
 {
-	t_token *head;
-	t_token *official_head;
-	t_token *tail;
+	t_token		*head;
+	t_token		*official_head;
+	t_token		*tail;
 	int			size;
 }t_lexer;
 
@@ -111,6 +111,7 @@ typedef struct s_shell
 	char **env;
 	char **paths;
 	t_lexer *token_list;
+	t_lexer *refined_list;
 	t_env *ev;
 	t_cmd *root;
 
@@ -124,7 +125,7 @@ void print_loop(char **s);
 
 /* ANALISE.C */
 void		analise_cmd_line(t_shell *shell, char *cmdline);
-void		fill_first_list(t_shell *shell, char *cmdl);
+void		parse_tokens(t_shell *shell, char *cmdl);
 void print_tree(t_cmd *root);
 void delete_tree(t_cmd *root);
 

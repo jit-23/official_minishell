@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/22 07:11:04 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/04 19:13:59 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,20 @@ static void print_vals(t_env *e, char **ev)
 
 static void  init_shell(t_shell *shell, char **ev)
 {
-	shell->ev = NULL;	
-	shell->env = NULL;	
+	shell->ev = NULL;
+	shell->env = NULL;
 	shell->root = NULL;
 	shell->paths = NULL;
 	shell->prompt = NULL;
-	shell->cmd_line = NULL;	
+	shell->cmd_line = NULL;
 	shell->token_list = NULL;
 	shell->stop_iteration = 0;
 	shell->token_list = (t_lexer *)malloc( sizeof(t_lexer));
+	//shell->refined_list = (t_lexer *)malloc( sizeof(t_lexer));
 	shell->token_list->head = NULL;
 	shell->token_list->official_head = NULL;
+	//shell->refined_list->head = NULL;
+	//shell->refined_list->official_head = NULL;
 	shell->ev = expand_env(shell, ev);
 }
 
@@ -88,7 +91,7 @@ int main(int ac,char **av ,char **ev)
 		if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
 		{
 			delete_all(&shell);
-    		return 0;
+			return 0;
 		}
 	    if (shell.cmd_line)
 	        analise_cmd_line(&shell, shell.cmd_line);

@@ -504,3 +504,192 @@ void    init_AST(t_shell *sh)
 	
 	return ;
 }
+
+
+void	fill_first_list(t_shell *shell, char *cmdl)
+{
+	int			i;
+	t_placing	place;
+
+	i = 0;
+	place = DEFAULT;
+	while(cmdl[i])
+	{
+		if (cmdl[i] == '\'')
+			i += handle_single_quotes_type(39, shell, &place);
+		else if (cmdl[i] == '\"')
+			i += handle_double_quotes_type(34, shell, &place);
+		else if(cmdl[i] && is_space(cmdl[i]))
+		{
+			while(cmdl[i] == 32 || cmdl[i] == 9)
+				i++;
+		}
+		else if (cmdl[i] && cmdl[i] == '$')
+			i += get_env_var(cmdl, i, shell, place);
+		else if (cmdl[i] && cmdl[i] == '|')
+			i += get_pipe(shell, place);
+		else if (cmdl[i] && cmdl[i] == '>' || cmdl[i] == '<')
+			i += get_redirect_var(cmdl, i, shell, place);
+		else if (cmdl[i] && !special_char(cmdl[i]) && !is_space(cmdl[i]))
+			i += get_word(cmdl, i, shell, place);
+	}
+}
+
+static void refine_token_list(t_shell *sh)
+{
+	t_token *token;
+	t_token *tmp;
+
+	token = sh->token_list->official_head;
+	while(token)
+	{
+		printf("t---->%s\n", token->token);
+		while(token && (token->type != ENV && token->type != WORD))
+		{
+			token = token->next;
+		}
+		printf("1");
+		printf("token 1 - %s\n", token->token);
+		if (token)
+		{
+			tmp = token;
+			tmp = tmp->next;
+			while(tmp && (tmp->type == S_QUOTE || tmp->type == D_QUOTE))
+			{
+				tmp = tmp->next;
+			}
+			printf("token - %s\n", token->token);
+			printf("tmp - %s\n",tmp->token);
+			if(token && tmp && (tmp->type == WORD || tmp->type == ENV))
+			{
+				token->token = ft_strjoin(token->token, tmp->token);
+				//printf("\t\t\t\ttoken->token %s\n", token->token);
+			}
+			if (tmp->next != NULL)
+			{
+				token->next = tmp->next;
+				//while(token && (token->type != ENV && token->type != WORD))
+				//	token = token->next;
+				//printf("pwd");
+			}
+			else
+			{
+				token->next = NULL;
+				break ;
+			}
+		token = token->next;
+		}
+		printf("--------------------------\n");
+
+	}
+	printf("OUT\n");
+	//printf("sh->token_list->official_head->token  - %s\n", sh->token_list->official_head->token);
+	//sh->refined_list->official_head = sh->token_list->official_head;
+	//printf("sh->refined->official_head->token  - %s\n", sh->refined_list->official_head->token);
+
+}
+
+
+static void refine_token_list(t_shell *sh)
+{
+	t_token *token;
+	t_token *tmp;
+
+	token = sh->token_list->official_head;
+	while(token)
+	{
+		while(token && (token->type != ENV && token->type != WORD))
+			token = token->next;
+		if (token)
+		{
+			tmp = token;
+			tmp = tmp->next;
+			while(tmp && (tmp->type == S_QUOTE || tmp->type == D_QUOTE))
+				tmp = tmp->next;
+			printf("token - %s\n", token->token);
+			printf("tmp - %s\n",tmp->token);
+			if(token && tmp && (tmp->type == WORD || tmp->type == ENV))
+				token->token = ft_strjoin(token->token, tmp->token);
+			if (tmp->next != NULL)
+			{
+				printf("post strjoin - %s\n", token->token);
+				token->next = tmp->next;
+				
+				while(token && (token->type == S_QUOTE || token->type == S_QUOTE))
+					token = token->next;
+				token = token->next;
+			}
+			else
+			{
+				token->next = NULL;
+				break ;
+			}
+			token = token->next;
+		}
+		printf("--------------------------\n");
+	}
+	printf("OUT\n");
+	//printf("sh->token_list->official_head->token  - %s\n", sh->token_list->official_head->token);
+	//sh->refined_list->official_head = sh->token_list->official_head;
+	//printf("sh->refined->official_head->token  - %s\n", sh->refined_list->official_head->token);
+
+}
+
+t_token *token;
+	t_token *tmp;
+
+	token = sh->token_list->official_head;
+	while(token)
+	{
+		printf("1\n");
+		while(token && (token->type != ENV && token->type != WORD))
+		{
+			printf("here1\n");
+			token = token->next;
+		}
+		printf("token - %s\n", token->token);
+		printf("2\n");
+		tmp = token->next;
+		printf("2\n");
+		if (token && tmp)
+		{
+			printf("3\n");
+			while(tmp->type == ENV || tmp->type == WORD || tmp->type == S_QUOTE || tmp->type == D_QUOTE)
+			{
+				printf("4\n");
+
+				if (tmp->type == WORD || tmp->type == ENV)
+				{
+					token->token = ft_strjoin(token->token, tmp->token);
+					tmp = tmp->next;
+				}
+			}
+			token->next = tmp->next;	
+		}
+		else
+			break;
+		token = token->next;
+	}
+
+
+t_token *tmp;
+    int i;
+
+    i = 0;
+    tmp = sh->token_list->head;
+    if (sh->token_list->head->prev == NULL)
+        sh->root = (t_cmd *)exec_struct;
+    while(tmp && (peek_token(tmp, 1, "|") == 0))
+    {
+        if (peek_token(tmp, 2 , " ", "\t") == 1)
+            tmp = tmp->next;
+        else
+        {
+            exec_struct->args[i] = ft_strdup(tmp->token);
+            tmp = tmp->next;
+            i++;
+        }
+    }
+    exec_struct->args[i] = NULL;
+    sh->token_list->head = tmp;
+    return ((t_cmd *)exec_struct);
