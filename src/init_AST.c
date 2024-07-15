@@ -118,17 +118,6 @@ t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 	while (sh->token_list->head && peek_token(sh->token_list->head, 1, "|") == 0)
 	{
 		branch_root = parse_redir((t_cmd *)branch_root, sh);
-		
-		//printf("token post branch = %s\n", sh->token_list->head->token);
-		/* if (sh->token_list->head && sh->token_list->head->type == WORD) // still CANOT handle single ordouble, but its easy, just make a function that can  hanlde each sitaution SQ DQ and default, tokens already done. i just didnt bcs lazy...
-		{
-			exec_struct->args[i++] = ft_strdup(sh->token_list->head->token);	 
-			sh->token_list->head = sh->token_list->head->next; 
-		}
-		else if (sh->token_list->head && (sh->token_list->head->type == S_QUOTE || sh->token_list->head->type == D_QUOTE)) 
-			sh->token_list->head = sh->token_list->head->next; 
-		else
-			break ; */
 		if (!sh->token_list->head)
 			break ;
 		if (sh->token_list->head && sh->token_list->head->type == WORD || sh->token_list->head->type == ENV)
@@ -143,18 +132,7 @@ t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 	if (prev == NULL)
 		sh->root = (t_cmd *)branch_root;
 	return ((t_cmd *)branch_root); 
-	//printf("===exec parse function===\n");
-    
 }
-
-/* if (peek_token(sh->token_list->head, 2 , " ", "\t") == 1)
-			sh->token_list->head = sh->token_list->head->next;
-		else
-		{
-			exec_struct->args[i] = ft_strdup(sh->token_list->head->token);
-			sh->token_list->head = sh->token_list->head->next;
-			i++;
-		} */
 
 void    init_AST(t_shell *sh)
 {
@@ -249,7 +227,6 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh)
 	while (peek_token(sh->token_list->head, 3, ">", ">>", "<"))
 	{
 		tmp = handle_redir_type(sh);
-		//printf("tmp - (mode) - %s\n", tmp->mode);
 		if (ret->type == _EXEC)
 		{
 			tmp->cmd = (t_cmd *)ret;
@@ -263,35 +240,5 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh)
 		}
 		sh->token_list->head = sh->token_list->head->next;
 	}
-	if (sh->token_list->head)
-		printf("token  - .%s.\n", sh->token_list->head->token);
-	else
-		printf("NO MORE\n");
 	return ((t_cmd *)ret);
 }
-/* t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh, t_token *token)
-{
-	t_redir *ret;
-	t_redir *tmp;
-	t_redir *tmp2;
-
-	sh->token_list->head = token;
-	ret = (t_redir *)branch_root;
-	while(peek_token(sh->token_list->head, 3, ">", ">>", "<"))
-	{
-		tmp = handle_redir_type(sh);
-		if (ret->type == _EXEC)
-		{
-			tmp->cmd = (t_cmd *)ret;
-			ret = tmp;
-		}
-		else if (ret->type == _REDIR)
-		{
-			tmp2 = get_last_redir((t_cmd *)ret);
-			tmp->cmd = (t_cmd *)tmp2->cmd;
-			tmp2->cmd = (t_cmd *)tmp;
-		}
-		sh->token_list->head = sh->token_list->head->next;
-	}
-	return ((t_cmd *)ret);
-} */

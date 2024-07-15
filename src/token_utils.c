@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 23:00:04 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/29 08:52:50 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/15 05:49:27 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,10 @@ int	special_char(char c)
 							 V 											*/
 int	get_space(char *cmdl, int i, t_shell *sh, t_placing placing)
 {
-	int j;
-	char *og_space;
+	char *space;
 
-	og_space = ft_strdup(" ");
-	add_to_list(sh->token_list, og_space, SPACE_BAR, placing);
+	space = ft_strdup(" ");
+	add_to_list(sh->token_list, space, SPACE_BAR, placing);
 	return (1);
 }
 
@@ -80,17 +79,18 @@ int	get_quote(t_shell *sh, t_placing *placing, char quote_type)
 {
 	char *quote_token;
 
+	char *s_quote;
+	char *d_quote;
+
 	if (quote_type == '\'')
 	{
-		//printf("-----------------------SQ\n");
-		quote_token = ft_strdup("\'");
-		add_to_list(sh->token_list, quote_token, S_QUOTE, *placing);	
+		s_quote = strdup("\''");
+		add_to_list(sh->token_list, s_quote, S_QUOTE, *placing);	
 	}
-	else
+	else if(quote_type == '\"')
 	{
-		//printf("-----------------------DQ\n");
-		quote_token = ft_strdup("\'");
-		add_to_list(sh->token_list, quote_token, D_QUOTE, *placing);	
+		d_quote = strdup("\"");
+		add_to_list(sh->token_list, d_quote, D_QUOTE, *placing);	
 	}
 	return (1);
 }

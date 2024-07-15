@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/20 19:47:48 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:51:09 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void	add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing
 	t_token *head;
 	t_token *prev;
 	t_token *last;
+
 	if (!token_list->head)
 	{
-		
 		token_list->head = new_node(word, type, placing);
 		token_list->head->prev = NULL;
 		token_list->official_head = token_list->head;
@@ -84,37 +84,7 @@ void	add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing
 	}
 	last = ft_lstlast(token_list->head);
 	last->next = new_node(word, type, placing);
-	//printf("last->next->token - %s\n",last->next->token);
 	prev = last;
 	last = last->next;
 	last->prev = prev;
 }
-
-/* 
-void	fill_stack(long *nbrs, t_stack **head, int size)
-{
-	int		i;
-	t_stack	*prev;
-	t_stack	*a;
-
-	i = 0;
-	a = (*head);
-	prev = (*head);
-	while (i < size)
-	{
-		if (i == 0)
-		{
-			a->x = nbrs[i];
-			a->prev = NULL;
-		}
-		else
-		{
-			a->next = ft_lstnew(nbrs[i]);
-			a = a->next;
-			a->prev = prev;
-			prev = prev->next;
-		}
-		i++;
-	}
-	a->next = NULL;
-} */

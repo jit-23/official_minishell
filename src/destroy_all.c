@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 17:07:57 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/21 02:14:19 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:20:07 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ void delete_all(t_shell *shell)
 		free(shell->prompt);
 	if (shell->token_list) // tenho q initializar->->->-> // aqui tenho problema de reaidn g->->->->
 		delete_token_lst(shell->token_list->official_head, lst_size_tokens(shell->token_list->official_head));
+	if (shell->refined_list)
+		delete_token_lst(shell->refined_list->official_head, lst_size_tokens(shell->refined_list->official_head));
 	if (shell->root)
 		delete_tree(shell->root);
 	if (shell->token_list)
 		free(shell->token_list);
+	if (shell->refined_list)
+		free(shell->refined_list);
 	if (shell->ev)
 		delete_env_lst(shell->ev, lst_size_env(shell->ev));
 }

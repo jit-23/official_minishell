@@ -6,29 +6,17 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 20:01:30 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/04 19:45:09 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:17:40 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-/* \n && '//' */
-/* int get_pipe(t_shell *sh, t_placing placing)
-{
-	char *pipe_var;
 
-	pipe_var = (char *)s_malloc(sizeof(sizeof(char) * 2));
-	pipe_var[1] = '\0';
-	pipe_var[0] = '|';
-	add_to_list(sh->token_list, pipe_var, PIPE, placing);
-	return (1);
-} */
 static int	get_new_line(t_shell *sh, t_placing place)
 {
 	char *newl;
 
-	newl = (char *)s_malloc(sizeof(sizeof(char) * 2));
-	newl[0] = '\n';
-	newl[1] = '\0';
+	newl = ft_strdup("\n");
 	add_to_list(sh->token_list, newl, NEW_LINE, place);
 	return (1);
 }
@@ -74,7 +62,7 @@ static void analise_cmdl(t_shell *shell, t_placing place, int i, char *cmdl)
 //	}
 }
 
-static void refine_token_list(t_shell *sh)
+/* static void refine_token_list(t_shell *sh)
 {
 	t_token *token;
 	t_token *tmp;
@@ -101,16 +89,140 @@ static void refine_token_list(t_shell *sh)
 				token->next = tmp;
 			token = token->next;
 		}
+	 }
+} */
+
+static void add_to_refined_list(t_lexer *token_refined, char *word, t_type type)
+{
+	t_token *head;
+	t_token *prev;
+	t_token *last;
+	if (!token_refined->head)
+	{
+		
+		token_refined->head = new_node(word, type, 0);
+		token_refined->head->prev = NULL;
+		token_refined->official_head = token_refined->head;
+		return ;
 	}
-	
+	last = ft_lstlast(token_refined->head);
+	last->next = new_node(word, type, 0);
+	//printf("last->next->token - %s\n",last->next->token);
+	prev = last;
+	last = last->next;
+	last->prev = prev;
 }
+
+//static void handle_word_token(t_shell *sh)
+//{
+//	char *w;
+//	char *a;
+//	t_token *og;
+//	char *p;
+//
+//
+//	og = sh->token_list->head;
+//	a = NULL;
+//	w = malloc(sizeof(char) * 1);
+//	w[0] = '\0';
+//	while(sh->token_list->head && (sh->token_list->head->type == ENV || sh->token_list->head->type == WORD || sh->token_list->head->type == S_QUOTE || sh->token_list->head->type == D_QUOTE))
+//	{
+//		if(sh->token_list->head && (sh->token_list->head->type == WORD || sh->token_list->head->type == ENV))
+//		{
+//			if (sh->token_list->head && (sh->token_list->head->type == ENV || sh->token_list->head->type == WORD || sh->token_list->head->type == S_QUOTE || sh->token_list->head->type == D_QUOTE))
+//			{
+//				if (sh->token_list->head->type == ENV || sh->token_list->head->type == WORD)
+//				{
+//					w = ft_strjoin(w, sh->token_list->head->token);
+//				}
+//				else
+//				{
+//					sh->token_list->head = sh->token_list->head->next;
+//				}
+//				/* printf("\tw - .%s.\n", w);
+//				printf("\tsh->token_list->head->token - .%s.\n",sh->token_list->head->token);
+//				w = ft_strjoin(w, sh->token_list->head->token);
+//				printf("\ttoken colado - %s\n", w);
+//				printf("token --- %s\n", w); */
+//			}
+//		}	
+//			sh->token_list->head = sh->token_list->head->next;
+//	}
+//	add_to_refined_list(sh->refined_list, w, og->type);
+//}
+
+ static void handle_word_token(t_shell *sh)
+{
+	char *w;
+	char *a;
+	t_token *og;
+	char *p;
+
+
+	og = sh->token_list->head;
+	a = NULL;
+	w = ft_strdup("");
+	while(sh->token_list->head && (sh->token_list->head->type == ENV || sh->token_list->head->type == WORD || sh->token_list->head->type == S_QUOTE || sh->token_list->head->type == D_QUOTE))
+	{
+			if (sh->token_list->head->type == ENV || sh->token_list->head->type == WORD)
+			{
+				a = ft_strjoin(w, sh->token_list->head->token);
+				free(w);
+				w = a;
+			}
+			else
+				sh->token_list->head = sh->token_list->head->next;
+			sh->token_list->head = sh->token_list->head->next;
+	}
+	add_to_refined_list(sh->refined_list, w, og->type);
+}
+
+static void refine_token_list(t_shell *sh)
+{
+	t_token  *token;
+
+	//sh->token_list->head;
+	while(sh->token_list->head)
+	{
+		printf("loop0\n");
+		if (sh->token_list->head->type == WORD)
+		{
+			printf("loop1\n");
+			handle_word_token(sh);
+			printf("loop2\n");
+		}
+		else if (sh->token_list->head->type == ENV)
+			handle_word_token(sh);
+		printf("hereee\n");
+		printf("token - %p\n", sh->token_list->head);
+		//else if (sh->token_list->head->type == DREDIREC)
+		if (!sh->token_list->head)
+			break ;
+		sh->token_list->head = sh->token_list->head->next;
+		printf("hereee\n");
+
+	}	
+}
+
 void	parse_tokens(t_shell *shell, char *cmdl)
 {
 	t_placing	place;
 
+	place = DEFAULT;
+	analise_cmdl(shell, place, 0, shell->cmd_line);
+	refine_token_list(shell/* , shell->token_list->official_head */);
 	// primeira lista feita.
+	/* t_token *head;
+	head = shell->token_list->official_head;
+	while(head)
+	{
+		printf("..............\n");
+		printf("address = .%p.\n", head);
+		printf("address = .%s.\n", head->token);
+		printf("..............\n");
+		head = head->next;
+	} */
 	/* agr preciso de outra lista que tera os token ajustados em caso de ex: "p"d'w' == (pwd) ou  */
-	//refine_token_list(shell);
 }
 
 void	analise_cmd_line(t_shell *shell, char *cmdline)
@@ -118,31 +230,31 @@ void	analise_cmd_line(t_shell *shell, char *cmdline)
 	//t_cmd *tmp_root;
 	// trim edges on cmdline for = (' ' && '\t');
 	t_placing place = DEFAULT;
-	analise_cmdl(shell, place, 0, shell->cmd_line);
+	parse_tokens(shell, cmdline);
+//	if (check_syntax(shell))
+//	{
+//		printf("lol\n");
+//		return ;
+//	}
 
-	//parse_tokens(shell, cmdline);
-	/*if (check_syntax(shell))
-		return ; */
-	
-	//return ;
 	t_token *head;
-
 	//head = shell->refined_list->official_head;
 
-	head = shell->token_list->official_head;
+	head = shell->refined_list->official_head;
+	printf("here\n");
 	while(head)
 	{
 		printf("===================\n");
+		printf("address = .%p.\n", head);
 		printf("token   = .%s.\n", head->token);
 		printf("Placing = .%u.\n", head->placing);
 		printf("Type    = .%d.\n", head->type);
 		head = head->next;
 	}
+	printf("\t\tdddddd\n");
+	return ;
 	init_AST(shell);
-	//tmp_root = shell->root;
-	//printf("ROOT - %d\n", shell->root->type);
 	print_tree(shell->root);
-	//delete_all(shell);
 	return ;
 }
 

@@ -693,3 +693,112 @@ t_token *tmp;
     exec_struct->args[i] = NULL;
     sh->token_list->head = tmp;
     return ((t_cmd *)exec_struct);
+
+
+
+
+
+
+
+static void refine_token_list(t_shell *sh)
+{
+	t_token *token;
+	t_token *tmp;
+	t_token *del;
+	char *a;
+	token = sh->token_list->official_head;
+	while (token)
+	{
+		while (token && (token->type != ENV && token->type != WORD))
+			token = token->next;
+		if (!token->next)
+		{
+			printf("no token->next\n");
+			break;
+		}
+			
+		tmp = token->next;
+		if (!tmp || !token)
+			break;
+		while (tmp && (tmp->type == ENV || tmp->type == WORD || tmp->type == S_QUOTE || tmp->type == D_QUOTE))
+		{
+			if (tmp->type == WORD || tmp->type == ENV)
+			{
+				a =  ft_strjoin(token->token, tmp->token);
+				free(token->token);
+				token->token = a;
+				del = tmp;
+				tmp = tmp->next;
+				free(del->token);
+				free(del);
+			}
+			else // S or D quote
+			{
+				del = tmp;
+				tmp = tmp->next;
+				free(del);
+			}
+		}
+		if (!tmp)
+			token->next = NULL;
+		else
+			token->next = tmp;
+		token = token->next;
+	}
+	printf("end of ref\n");
+}
+
+static void refine_token_list(t_shell *sh)
+{
+	t_token *token;
+	t_token *tmp;
+	t_token *del;
+	char *a;
+	token = sh->token_list->official_head;
+	while (token)
+	{
+		while (token && (token->type != ENV && token->type != WORD))
+			token = token->next;
+		if (token->next == NULL)
+		{
+			printf("no token->next\n");
+			break;
+		}
+		tmp = token->next;
+		if (!tmp || !token)
+			break;
+		if (token && (token->type == ENV || token->type == WORD))
+		{
+			printf("tokn  - %s\n", token->token);
+			
+			while (tmp && (tmp->type == ENV || tmp->type == WORD || tmp->type == S_QUOTE || tmp->type == D_QUOTE))
+			{
+				if (tmp->type == WORD || tmp->type == ENV)
+				{
+					a =  ft_strjoin(token->token, tmp->token);
+					free(token->token);
+					token->token = a;
+					del = tmp;
+					tmp = tmp->next;
+					free(del->token);
+					free(del);
+				}
+				else // S or D quote
+				{
+					del = tmp;
+					tmp = tmp->next;
+					free(del);
+				}
+			}
+	//		printf("end of (if) token - .%s.\n", tmp->token);
+		}
+		
+		if (!tmp)
+			token->next = NULL;
+		else
+			token->next = tmp;
+		token = token->next;
+	//	printf("ending x loop = .%s.\n", token->token);
+	}
+	printf("end of ref\n");
+}
