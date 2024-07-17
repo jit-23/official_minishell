@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:42:37 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/17 17:58:34 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:42:20 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	mini_unset(char **a, t_shell *shell) // unfinished
 			write(1, "minishell: unset: PATH: cannot unset\n", 38);
 			return (1);
 		}
-		env_remove(env, a[i]);
+		env_remove(env, a[i]); //TO DO
 		i++;
 	}
 	return (0);
