@@ -38,6 +38,7 @@ typedef struct s_redir t_redir;
 struct s_cmd
 {
 	int type;
+	char **args;
 };
 
 struct s_exec
