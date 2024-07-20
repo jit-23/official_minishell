@@ -144,6 +144,7 @@ void clean_for_next_loop(t_shell *sh);
 
 
 /* LIST_UTILS.C */
+void	delete_node(t_shell *mini, t_env *env);
 t_token		*ft_lstlast(t_token *head);
 t_token		*new_node(char *token, t_type type, t_placing placing);
 void		delete_lst(t_token **head, int size);

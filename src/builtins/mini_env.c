@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:58:46 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/17 18:54:17 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:31:37 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	mini_env(t_shell *shell)
 {
 	t_env *env;
+	t_env *tmp;
 
 	env = shell->ev;
 	while (env)

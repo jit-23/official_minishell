@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/11 13:51:09 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:34:46 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	delete_node(t_shell *mini, t_env *env)
+{
+	if(mini->ev == env && env->next == NULL)
+	{
+		if(mini->ev->prev)
+			mini->ev->prev->next = NULL;
+		free(env->env_value);
+		free(mini->ev->env_name);
+		return ;
+	}
+	if(env->prev)
+		env->prev->next = env->next;
+	if(env->next)
+		env->next->prev = env->prev;
+	free(env->env_name);
+	free(env);
+}
 
 t_token *new_node(char *token, t_type type, t_placing placing) // prev e definido na funcao na qual este e chamada
 {
