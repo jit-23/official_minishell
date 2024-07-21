@@ -11,6 +11,8 @@
 # include <curses.h>
 # include <term.h>
 #include <stdarg.h>
+#include <errno.h>
+#include <limits.h>
 #include "env.h"
 
 #define SKIP_SPACES 1 // if im in a space token and i dont know. i skip to the next token
@@ -130,6 +132,8 @@ void		parse_tokens(t_shell *shell, char *cmdl);
 void print_tree(t_cmd *root);
 void delete_tree(t_cmd *root);
 
+
+
 /* DESTROY_UTILS_ALL.C */
 void	delete_env_lst(t_env *head, int size);
 int		lst_size_env(t_env *head);
@@ -142,6 +146,8 @@ void delete_tree(t_cmd *root);
 void delete_all(t_shell *shell);
 void clean_for_next_loop(t_shell *sh);
 
+/* ENV TOOLS */
+char *get_env_value(char **env, char *name, int len);
 
 /* LIST_UTILS.C */
 void	delete_node(t_shell *mini, t_env *env);

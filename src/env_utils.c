@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_env.c                                         :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 17:58:46 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/21 21:28:06 by eescalei         ###   ########.fr       */
+/*   Created: 2024/07/21 20:46:31 by eescalei          #+#    #+#             */
+/*   Updated: 2024/07/21 20:55:51 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	mini_env(t_shell *shell)
+char *get_env_value(char **env, char *name, int len)
 {
-	char **env;
-	char *tmp;
 	int i;
+	int j;
+	int s_alloc;
+	char *value;
 
 	i = -1;
-	env = shell->env;
+	j = len + 1;
 	while (env[++i])
 	{
-		write(1, env[i], ft_strlen(env[i]));
-		write(1, "\n", 1);
+		if (ft_strncmp(env[i], name, len) == 0)
+		{
+			s_alloc = ft_strlen(env[i]) - len;
+			value = (char *)malloc(sizeof(char) *s_alloc );
+			if (!value)
+				return (NULL);
+			while(env[i][j++])
+				value[j - len] = env[i][j];
+			return (value);
+		}	
 	}
-	return (0);
+	return (NULL);
 }

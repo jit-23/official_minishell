@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/20 10:34:46 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/20 15:31:36 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	delete_node(t_shell *mini, t_env *env)
 			mini->ev->prev->next = NULL;
 		free(env->env_value);
 		free(mini->ev->env_name);
+		mini->ev = NULL;
 		return ;
 	}
 	if(env->prev)
