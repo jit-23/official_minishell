@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:58:46 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/21 21:28:06 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:39:21 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ int	mini_env(t_shell *shell)
 		write(1, env[i], ft_strlen(env[i]));
 		write(1, "\n", 1);
 	}
-	return (0);
+	return (SUCCESS);
 }

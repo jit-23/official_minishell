@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 20:56:34 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/21 21:53:38 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:38:59 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,42 @@ int	update_old_pwd(char **env)
 	char *old_pwd;
 
 	if(getcwd(cwd, PATH_MAX) == NULL)
-		return (1);
+		return (ERROR);
 	if(!(old_pwd = strjoin("OLDPWD=", cwd)))
-		return (1);
+		return (ERROR);
 	if(is_in_env(env, old_pwd)) //TO DO
 		env_add(env, old_pwd);  //TO DO
 	free(old_pwd);
-	return (0);
+	return (SUCCESS);
+}
+
+int	go_to_path(int option, char **env)
+{
+	int status;
+	char *env_path;
+
+	env_path = NULL;
+	if(option == 0)
+	{
+		update_old_pwd(env);
+		env_path = get_env_value("HOME", env_path, 4);
+		if(env_path)
+			write(2, "cd: HOME not set\n", 17);
+		if(env_path)
+			return (1);
+	}
+	else if(option == 1)
+	{
+		env_path = get_env_value("OLDPWD", env_path, 4);
+		if(env_path)
+			write(2, "cd: OLDPWD not set\n", 17);
+		if(env_path)
+			return (1);
+		update_old_pwd(env);
+	}
+	status = chdir(env_path);
+	free(env_path);
+	return (status);
 }
 
 int mini_cd(char **args, t_shell *shell)

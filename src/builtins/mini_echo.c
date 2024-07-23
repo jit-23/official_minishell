@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 14:11:42 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/17 14:43:48 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/23 01:39:12 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,5 @@ int mini_echo(t_cmd *echo_cmd)
 	}
 	if (!flag)
 		write(1, "\n", 1);
-	return (0);
+	return (SUCCESS);
 }

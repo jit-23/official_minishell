@@ -13,6 +13,7 @@
 #include <stdarg.h>
 #include <errno.h>
 #include <limits.h>
+#include <linux/limits.h>
 #include "env.h"
 
 #define SKIP_SPACES 1 // if im in a space token and i dont know. i skip to the next token
@@ -26,44 +27,23 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+/* file descriptors */
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
+
+/* return values */
+# define ERROR 1
+# define SUCCESS 0
+
 #define _PIPE	1
 #define _EXEC	2
 #define _REDIR	3
 
-typedef struct s_token t_token;
-
-typedef struct s_cmd t_cmd;
-typedef struct s_exec t_exec;
-typedef struct s_pipe t_pipe;
-typedef struct s_redir t_redir;
-
-struct s_cmd
-{
-	int type;
-	char **args;
-};
-
-struct s_exec
-{
-	int type;
-	char *args[20];
-};
-
-struct s_pipe
-{
-	int type;
-	t_cmd *left;
-	t_cmd *right;
-};
-
-struct s_redir
-{
-	int type;
-	t_cmd *cmd;
-	char *file;
-	int mode;
-	int fd;
-};
+# define BUFF_SIZE 4096
+# define EXPANSION -36
+# define IS_DIRECTORY 126
+# define UNKNOWN_COMMAND 127
 
 typedef enum e_placing
 {
@@ -88,6 +68,34 @@ typedef enum e_type
 	ENV = '$',
 	PIPE = '|',
 } t_type;
+
+typedef struct s_cmd
+{
+	int type;
+	char **args;
+}t_cmd;
+
+typedef struct s_exec
+{
+	int type;
+	char *args[20];
+}t_exec;
+
+typedef struct s_pipe
+{
+	int type;
+	t_cmd *left;
+	t_cmd *right;
+}t_pipe;;
+
+typedef struct s_redir
+{
+	int type;
+	t_cmd *cmd;
+	char *file;
+	int mode;
+	int fd;
+}t_redir;
 
 typedef struct s_token
 {
@@ -127,12 +135,13 @@ typedef struct s_shell
 void print_loop(char **s);
 
 /* ANALISE.C */
-void		analise_cmd_line(t_shell *shell, char *cmdline);
-void		parse_tokens(t_shell *shell, char *cmdl);
-void print_tree(t_cmd *root);
-void delete_tree(t_cmd *root);
+void	analise_cmd_line(t_shell *shell, char *cmdline);
+void	parse_tokens(t_shell *shell, char *cmdl);
+void	print_tree(t_cmd *root);
+void	delete_tree(t_cmd *root);
 
-
+/* ENV TOOLS */
+char *get_env_value(char **env, char *name, int len);
 
 /* DESTROY_UTILS_ALL.C */
 void	delete_env_lst(t_env *head, int size);
@@ -146,9 +155,6 @@ void delete_tree(t_cmd *root);
 void delete_all(t_shell *shell);
 void clean_for_next_loop(t_shell *sh);
 
-/* ENV TOOLS */
-char *get_env_value(char **env, char *name, int len);
-
 /* LIST_UTILS.C */
 void	delete_node(t_shell *mini, t_env *env);
 t_token		*ft_lstlast(t_token *head);
@@ -156,7 +162,6 @@ t_token		*new_node(char *token, t_type type, t_placing placing);
 void		delete_lst(t_token **head, int size);
 int			lst_size(t_token **head);
 void		add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing);
-
 
 /* TOKEN_UTILS.C */
 int			get_word(char *cmdl, int i, t_shell *sh, t_placing placing);
@@ -184,9 +189,6 @@ char ** get_absolute_executable(t_exec *executable, t_shell *sh);
 void validate_exec(t_exec *executable_node, t_shell *sh);
 char **get_path(t_shell *sh);
 int is_path_env(char *s);
-
-
-
 
 /* INIT_AST.c */
 void    init_AST(t_shell *sh);

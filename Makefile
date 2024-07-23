@@ -7,6 +7,21 @@ RED:=\033[0;31m
 BLUE=\033[0;34m
 default_colour=\033[0m
 
+SRC_PATH:= src/
+OBJ_PATH:= obj/
+
+# BUILTINS_PATH = $(addprefix $(SRC_PATH), builtins/)
+
+# BUILTINS_src = mini_cd.c \
+# 				mini_echo.c \
+# 				mini_env.c \
+# 				mini_exit.c \
+#				mini_export.c \
+# 				mini_pwd.c \
+# 				mini_unset.c
+		
+
+# BUILTINS = $(addprefix $(BUILTINS_PATH), $(BUILTINS_src))
 
 SRC_FILES:=  main.c \
 					analise.c \
@@ -26,8 +41,6 @@ LIBFT:= includes/libft/libft.a
 
 OBJ_FILES:= $(patsubst %.c, %.o, $(SRC_FILES))
 
-SRC_PATH:= src/
-OBJ_PATH:= obj/
 
 SRC = $(addprefix $(SRC_PATH), $(SRC_FILES))
 OBJ = $(addprefix $(OBJ_PATH), $(OBJ_FILES))
