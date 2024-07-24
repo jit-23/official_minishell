@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 02:26:23 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/23 02:56:35 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/24 00:27:21 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,64 @@ int	print_error(int error, const char *arg)
 	return (ERROR);
 }
 
-int	mini_export(char **args, t_env *ev, t_env *hiden) // unfinished
+int env_add(t_env *ev, const char *arg)
+{
+	t_env	*new;
+	t_env	*tmp;
+
+	new = (t_env *)malloc(sizeof(t_env));
+	if (!new)
+		return (ERROR);
+	new->env_name = ft_strdup(arg); // change to func that cut string when position == '='
+	new->env_value = ft_strdup("");	// change to func that cut string when position == '='
+	new->next = NULL;
+	if (!ev)
+		return (new);
+	tmp = ev;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	return (SUCCESS);
+}
+
+char		*get_env_name(char *dest, const char *src)
+{
+	int		i;
+
+	i = 0;
+	while (src[i] && src[i] != '=' && ft_strlen(src) < BUFF_SIZE)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+int	is_in_env(t_env *ev, const char *arg)
+{
+	char *var_name[BUFF_SIZE];
+	char *env_name;
+	t_env *tmp;
+
+	tmp = ev;
+	get_env_name(var_name, arg);
+	while(tmp)
+	{
+		env_name = ev->env_name;
+		if(ft_strcmp(env_name, var_name) == 0)
+		{
+			free(ev->env_name);
+			ev->env_name = ft_strdup(var_name); // change to func that cut string when position == '='
+			free(ev->env_value);
+			ev->env_value = ft_strdup(arg);// change to func that cut string when position == '='
+			return (ERROR);
+		}
+		ev = ev->next;
+	}
+	return (SUCCESS);
+}
+int	mini_export(char **args, t_env *ev, t_env *hiden) // ^ problemas com estrutura ^
 {
 	int	new_ev;
 	int	status;
@@ -38,7 +95,7 @@ int	mini_export(char **args, t_env *ev, t_env *hiden) // unfinished
 	new_ev = 0;
 	if(!args[1])
 	{
-		print_env(hiden);
+		print_env(hiden); // TO DO
 		return (SUCCESS);
 	}
 	else
