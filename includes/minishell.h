@@ -43,7 +43,7 @@ struct s_cmd
 struct s_exec
 {
 	int type;
-	char *args[20];
+	char *args[200];
 };
 
 struct s_pipe

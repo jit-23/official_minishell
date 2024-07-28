@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/15 03:34:18 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/27 23:42:14 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int main(int ac,char **av ,char **ev)
 	t_shell shell;
 	if (ac != 1)
 		return (1); // msg erro
-	
 	//shell.paths = get_path(&shell);
 	/* - shell.paths = get_path(&shell); -> esta mal, era para confirmar se commands 
 	 eram validos, mas execve ja confiarma isso, mantenho 

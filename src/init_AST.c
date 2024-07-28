@@ -92,15 +92,15 @@ t_redir *init_redir()
 static int handle_token(t_shell *sh, t_exec *ex, int i)
 {
 	
-	if (sh->token_list->head->type == WORD)
+	if (sh->refined_list->head->type == WORD)
 	{
-		ex->args[i] = ft_strdup(sh->token_list->head->token);
-		sh->token_list->head = sh->token_list->head->next;
+		ex->args[i] = ft_strdup(sh->refined_list->head->token);
+		sh->refined_list->head = sh->refined_list->head->next;
 	}
-	else if (sh->token_list->head->type == S_QUOTE)
-		sh->token_list->head = sh->token_list->head->next;
-	else if (sh->token_list->head->type == D_QUOTE)
-		sh->token_list->head = sh->token_list->head->next;
+	else if (sh->refined_list->head->type == S_QUOTE)
+		sh->refined_list->head = sh->refined_list->head->next;
+	else if (sh->refined_list->head->type == D_QUOTE)
+		sh->refined_list->head = sh->refined_list->head->next;
 	else
 		return 0;
 	return 1;
@@ -113,20 +113,20 @@ t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 	t_token	*prev;
 
 	i = 0;
-	prev = sh->token_list->head->prev;
+	prev = sh->refined_list->head->prev;
 	branch_root = (t_cmd *)exec_struct;
-	while (sh->token_list->head && peek_token(sh->token_list->head, 1, "|") == 0)
+	while (sh->refined_list->head && peek_token(sh->refined_list->head, 1, "|") == 0)
 	{
 		branch_root = parse_redir((t_cmd *)branch_root, sh);
-		if (!sh->token_list->head)
+		if (!sh->refined_list->head)
 			break ;
-		if (sh->token_list->head && sh->token_list->head->type == WORD || sh->token_list->head->type == ENV)
+		if (sh->refined_list->head && sh->refined_list->head->type == WORD || sh->refined_list->head->type == ENV)
 		{
-			exec_struct->args[i++] = ft_strdup(sh->token_list->head->token);	 
-			sh->token_list->head = sh->token_list->head->next;
+			exec_struct->args[i++] = ft_strdup(sh->refined_list->head->token);	 
+			sh->refined_list->head = sh->refined_list->head->next;
 		}
 		else
-			sh->token_list->head = sh->token_list->head->next;
+			sh->refined_list->head = sh->refined_list->head->next;
 	}
 	exec_struct->args[i] = NULL;
 	if (prev == NULL)
@@ -137,7 +137,7 @@ t_cmd *exec_parse(t_shell*sh, t_exec *exec_struct)
 void    init_AST(t_shell *sh)
 {
     exec_parse(sh, init_exec());
-	if (!sh->token_list->head)
+	if (!sh->refined_list->head)
 		return ;
 	pipe_parse(sh, sh->root);
 }
@@ -149,14 +149,14 @@ t_cmd   *pipe_parse(t_shell *sh, t_cmd *left)
     pipe_struct = init_pipe();
     pipe_struct->left = left;
     sh->root = (t_cmd *)pipe_struct;
-    if (sh->token_list->head->next)
-        sh->token_list->head = sh->token_list->head->next;
-    if (peek_future_tokens_type(sh->token_list->head, PIPE))
+    if (sh->refined_list->head->next)
+        sh->refined_list->head = sh->refined_list->head->next;
+    if (peek_future_tokens_type(sh->refined_list->head, PIPE))
     {
         pipe_struct->right = exec_parse(sh, init_exec());
         pipe_parse(sh ,(t_cmd *)sh->root);
     }
-    else if (peek_future_tokens_type(sh->token_list->head, WORD))
+    else if (peek_future_tokens_type(sh->refined_list->head, WORD))
         pipe_struct->right = exec_parse(sh, init_exec());
     return ((t_cmd *)pipe_struct);
 }
@@ -165,31 +165,16 @@ static t_redir *fill_redir(char *s, int mode, t_shell *sh)
 {
 	t_redir *red;
 	t_token *tmp;
-	//printf("initial token = .%s.\n", sh->token_list->head->token);
 	red = init_redir();
-	while (sh->token_list->head && sh->token_list->head->type != WORD)
-		sh->token_list->head = sh->token_list->head->next;
-	red->file = sh->token_list->head->token;
-	printf("token in fill_redir - .%s.\n", sh->token_list->head->token);
+	while (sh->refined_list->head && sh->refined_list->head->type != WORD)
+		sh->refined_list->head = sh->refined_list->head->next;
+	red->file = sh->refined_list->head->token;
+	printf("token in fill_redir - .%s.\n", sh->refined_list->head->token);
 	printf("file in fill_redir - .%s.\n", red->file);
 	red->mode = mode;
 	return (red);
 }
 
-/* 	t_redir *red;
-	t_token *tmp;
-
-	tmp = sh->token_list->head;
-	printf("token temp - %s\n", tmp->token);
-	red = init_redir();
-	tmp = tmp->next;
-	if (!tmp)
-		return (printf("ERROR\n"),NULL);
-	red->file = tmp->token;
-	sh->token_list->head = tmp;
-	red->mode = mode;
-	printf("file - .%s.\n", red->file);
-	return (red); */
 
 static	t_redir *get_last_redir(t_cmd *sub_root)
 {
@@ -206,7 +191,7 @@ static t_redir *handle_redir_type(t_shell *sh)
 	int redir_type_len;
 	t_redir *red;
 
-	redir_type = sh->token_list->head->token;
+	redir_type = sh->refined_list->head->token;
 	redir_type_len = ft_strlen(redir_type);
 	if (strncmp(redir_type, ">" , redir_type_len) == 0)
 		red = fill_redir(">", 1, sh);
@@ -224,7 +209,7 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh)
 	t_redir	*tmp2;
 
 	ret = (t_redir *)branch_root;
-	while (peek_token(sh->token_list->head, 3, ">", ">>", "<"))
+	while (peek_token(sh->refined_list->head, 3, ">", ">>", "<"))
 	{
 		tmp = handle_redir_type(sh);
 		if (ret->type == _EXEC)
@@ -238,7 +223,7 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh)
 			tmp->cmd = (t_cmd *)tmp2->cmd;
 			tmp2->cmd = (t_cmd *)tmp;
 		}
-		sh->token_list->head = sh->token_list->head->next;
+		sh->refined_list->head = sh->refined_list->head->next;
 	}
 	return ((t_cmd *)ret);
 }

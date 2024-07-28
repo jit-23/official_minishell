@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 18:37:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/15 05:47:54 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:53:45 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,30 +73,14 @@ void	delete_token_lst(t_token *head, int size)
 	del = (head);
 	while (++i < size)
 	{
-		printf("-\n");
 		del = del->next;
-		printf("token deleted - %s\n", head->token);
 		if (head->token)
-		{
-			printf("token exist\n");
-			printf("head token - .%s.\n", head->token);
 			free(head->token);
-			
-		}
-		else
-			printf("token DONT exist\n");
-
 		if (head)
 		{
-			printf("a\n");
 			free(head);
-			printf("ab\n");
 			(head) = del;
-			printf("abc\n");
 		}
-		
-		printf("1\n"); 
-
 	}
 }
 

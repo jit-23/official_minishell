@@ -6,7 +6,7 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 00:04:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/06/11 19:11:33 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/27 23:41:35 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,7 @@ t_env *new_env_node(char *env) // prev e definido na funcao na qual este e chama
 {
     t_env *new_node;
 	
-    //new_node = (t_env *)calloc(4,sizeof(t_env));
 	new_node = (t_env *)ft_calloc(4,sizeof(t_env));
-	//memset
-	//new_node->env_name = 0;
-	//new_node->env_value = 0;
-	//new_node->next = 0;
-	////
 	new_node->env_name = get_name(env);
 	new_node->env_value = get_env_value(env);
     new_node->next = NULL;
