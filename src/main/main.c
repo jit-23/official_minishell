@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/28 22:22:49 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/29 17:52:57 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,9 @@ static void  init_shell(t_shell *shell, char **ev)
 	shell->refined_list->head = NULL;
 	shell->refined_list->official_head = NULL;
 	shell->ev = expand_env(shell, ev);
-	shell->out = -1;
-	shell->fdin = dup(STDIN);
-	shell->fdout = dup(STDOUT);
-	shell->pipin = -1;
-	shell->pipout = -1;
-	shell->pid = 0;
-	shell->
+	shell->in = dup(STDIN);
+	shell->out = dup(STDOUT);
+	reset_fd(shell);
 }
 
 int main(int ac,char **av ,char **ev)

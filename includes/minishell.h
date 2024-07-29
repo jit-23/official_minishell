@@ -126,17 +126,18 @@ typedef struct s_shell
 	t_env *ev;
 	t_env *hiden_ev;
 	t_cmd *root;
-	int				out;		//need innitialization
-	int				fdin;	//need innitialization
-	int				fdout;	//need innitialization
-	int				pipin;	//need innitialization
-	int				pipout;	//need innitialization
-	int				pid;	//need innitialization
-	int				charge;	//need innitialization
-	int				parent;	//need innitialization
-	int				last;	//need innitialization
-	int				ret;	//need innitialization
-	int				no_exec;	//need innitialization
+	int		in;
+	int		out;		//need innitialization
+	int		fdin;	//need innitialization
+	int		fdout;	//need innitialization
+	int		pipin;	//need innitialization
+	int		pipout;	//need innitialization
+	int		pid;	//need innitialization
+	int		charge;	//need innitialization
+	int		parent;	//need innitialization
+	int		last;	//need innitialization
+	int		ret;	//need innitialization
+	int		no_exec;	//need innitialization
 
 	bool stop_iteration;
 }t_shell;

@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:05:53 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/28 22:27:30 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/29 17:48:07 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void close_fd(int fd)
 {
-	if (fd != -1)
+	if (fd < 0)
 		close(fd);
 }
 
