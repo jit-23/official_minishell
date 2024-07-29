@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/15 03:34:18 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/28 22:22:49 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ static void print_vals(t_env *e, char **ev)
 
 static void  init_shell(t_shell *shell, char **ev)
 {
-	shell->ev = NULL;
-	shell->env = NULL;
+	shell->env = NULL;				//need innitialization
+	shell->hiden_ev = NULL;		//need innitialization
 	shell->root = NULL;
 	shell->paths = NULL;
 	shell->prompt = NULL;
 	shell->cmd_line = NULL;
 	shell->token_list = NULL;
-	shell->stop_iteration = 0;
+	shell->stop_iteration = false;
 	shell->token_list = (t_lexer *)malloc( sizeof(t_lexer));
 	shell->refined_list = (t_lexer *)malloc( sizeof(t_lexer));
 	shell->token_list->head = NULL;
@@ -72,31 +72,29 @@ static void  init_shell(t_shell *shell, char **ev)
 	shell->refined_list->head = NULL;
 	shell->refined_list->official_head = NULL;
 	shell->ev = expand_env(shell, ev);
+	shell->out = -1;
+	shell->fdin = dup(STDIN);
+	shell->fdout = dup(STDOUT);
+	shell->pipin = -1;
+	shell->pipout = -1;
+	shell->pid = 0;
+	shell->
 }
 
 int main(int ac,char **av ,char **ev)
 {
 	t_shell shell;
 	if (ac != 1)
-		return (1); // msg erro
-	
-	//shell.paths = get_path(&shell);
-	/* - shell.paths = get_path(&shell); -> esta mal, era para confirmar se commands 
-	 eram validos, mas execve ja confiarma isso, mantenho 
-	 aqui por se acaso reutilizo alguma cena */ 
-	while(1)
+		return (1); // prinf error// msg erro
+	init_shell(&shell, ev);
+	while(!(shell.stop_iteration))
 	{
-		init_shell(&shell, ev);
 		get_prompt(&shell);
-		if (ft_memcmp(shell.cmd_line, "exit\0", 5) == 0)
-		{
-			delete_all(&shell);
-			return 0;
-		}
-	    if (shell.cmd_line)
-			analise_cmd_line(&shell, shell.cmd_line);
-		delete_all(&shell);
+		analise_cmd_line(&shell, shell.cmd_line);
+		execute_promp();	//to do
+		free_token(&shell);//to do
 	}
+	delete_all(&shell);
 	return 0;
 }
 

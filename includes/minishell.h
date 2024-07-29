@@ -126,7 +126,7 @@ typedef struct s_shell
 	t_env *ev;
 	t_env *hiden_ev;
 	t_cmd *root;
-	int				out;			//need innitialization
+	int				out;		//need innitialization
 	int				fdin;	//need innitialization
 	int				fdout;	//need innitialization
 	int				pipin;	//need innitialization
@@ -138,7 +138,7 @@ typedef struct s_shell
 	int				ret;	//need innitialization
 	int				no_exec;	//need innitialization
 
-	int stop_iteration;
+	bool stop_iteration;
 }t_shell;
 
 /* ====================================================================================================== */

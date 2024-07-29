@@ -20,7 +20,6 @@ struct s_env
 t_env *expand_env(t_shell *shell, char **env);
 t_env *new_env_node(char *env); // prev e definido na funcao na qual este e chamada
 char *get_name(char *env_var);
-char *get_env_value(char *env_var);
+char *get_env_value(char *env_var, char *name, int len);
 
 #endif
-
