@@ -11,7 +11,7 @@
 # include <curses.h>
 # include <term.h>
 #include <stdarg.h>
-#include "env.h"
+//#include "env.h"
 
 #define SKIP_SPACES 1 // if im in a space token and i dont know. i skip to the next token
 #define JUMP_TOKEN 2// im in a token and i want to skip to the next token while ignoring the space_token between
@@ -34,6 +34,19 @@ typedef struct s_cmd t_cmd;
 typedef struct s_exec t_exec;
 typedef struct s_pipe t_pipe;
 typedef struct s_redir t_redir;
+
+
+typedef struct s_env t_env;
+typedef struct s_shell t_shell;
+
+
+struct s_env
+{
+    char *env_name;
+    char *env_value;
+    t_env *next;  
+    t_env *prev;   
+};
 
 struct s_cmd
 {
@@ -106,16 +119,17 @@ typedef struct s_lexer
 
 typedef struct s_shell
 {
-	char *cmd_line;
-	char *prompt;
-	char **env;
-	char **paths;
+	char	*cmd_line;
+	char	*prompt;
+	char	**env;
+	char	**paths;
 	t_lexer *token_list;
 	t_lexer *refined_list;
-	t_env *ev;
-	t_cmd *root;
+	t_env   *ev;
+	t_cmd	*root;
 
 	int stop_iteration;
+
 }t_shell;
 
 /* ====================================================================================================== */
@@ -123,11 +137,18 @@ typedef struct s_shell
 /* MAIN. */
 void print_loop(char **s);
 
+int	count_word_size(char *cmdl, int i, int count, t_placing placing);
 /* ANALISE.C */
-void		analise_cmd_line(t_shell *shell, char *cmdline);
-void		parse_tokens(t_shell *shell, char *cmdl);
-void print_tree(t_cmd *root);
-void delete_tree(t_cmd *root);
+void	analise_terminal_input(t_shell *shell, char *cmdline);  // 0
+void	parse_tokens(t_shell *shell, char *cmdl); // 0
+void	print_tree(t_cmd *root); // 0
+void	delete_tree(t_cmd *root); // delete_all
+int		get_new_line(t_shell *sh, t_placing place); // token_utils
+void	refine_token_list(t_shell *sh); // 0
+void 	handle_word_token(t_shell *sh); // 2
+void 	handle_token(t_shell *sh, char *token); //2
+void 	/* 2 */add_to_refined_list(t_lexer *token_refined, char *word, t_type type);
+void 	/* 1 */analise_cmdl(t_shell *shell, t_placing place, int i, char *cmdl);
 
 /* DESTROY_UTILS_ALL.C */
 void	delete_env_lst(t_env *head, int size);
@@ -141,7 +162,6 @@ void delete_tree(t_cmd *root);
 void delete_all(t_shell *shell);
 void clean_for_next_loop(t_shell *sh);
 
-
 /* LIST_UTILS.C */
 t_token		*ft_lstlast(t_token *head);
 t_token		*new_node(char *token, t_type type, t_placing placing);
@@ -151,6 +171,7 @@ void		add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placin
 
 
 /* TOKEN_UTILS.C */
+//int handle_token(t_shell *sh, t_exec *ex, int i);
 int			get_word(char *cmdl, int i, t_shell *sh, t_placing placing);
 int			get_space(char *cmdl, int i, t_shell *sh, t_placing placing);
 int 		get_quote(t_shell *sh, t_placing *placing, char quote_type);
@@ -181,7 +202,10 @@ int is_path_env(char *s);
 
 
 /* INIT_AST.c */
-void    init_AST(t_shell *sh);
+void    init_ast(t_shell *sh);
+t_redir *get_last_redir(t_cmd *sub_root);
+t_redir *handle_redir_type(t_shell *sh);
+t_redir *fill_redir(char *s, int mode, t_shell *sh);
 int 	peek_future_tokens_type(t_token *head, t_type type);
 t_cmd   *pipe_parse(t_shell *sh, t_cmd *left);
 t_cmd 	*exec_parse(t_shell*sh, t_exec *exec_struct);
@@ -195,6 +219,13 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh);
 /* CHECK_SYNTAX.C */
 int check_syntax(t_shell *sh);
 int check_pipe_sequence(t_token *token);
+
+/* env_expand.c */
+t_env *expand_env(t_shell *shell, char **env);
+t_env *new_env_node(char *env); // prev e definido na funcao na qual este e chamada
+char *get_name(char *env_var);
+char *get_env_value(char *env_var);
+
 
 
 #endif

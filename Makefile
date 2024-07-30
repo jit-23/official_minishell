@@ -10,15 +10,21 @@ default_colour=\033[0m
 
 SRC_FILES:=  main.c \
 					analise.c \
-					list_utils.c \
-					token_utils.c \
-					env_expand.c\
-					init_AST.c\
-					destroy_utils.c\
-					destroy_all.c\
-					tree_validation.c\
 					check_syntax.c\
+					create_first_list.c\
+					create_second_list.c\
+					list_utils.c \
+					delete_tree.c\
+					destroy_all.c\
+					destroy_utils.c\
+					env_expand.c\
+					init_AST_structs.c\
+					init_AST.c\
+					lexer_utils.c\
+					redir_management.c\
+					token_utils.c\
 #					init_tree.c\
+					tree_validation.c\
 
 MAKE:= make -C
 LIBFT_DIR:= includes/libft
@@ -47,7 +53,7 @@ ${NAME}:  ${OBJ}
 #		${MAKE} ${LIBFT_DIR}
 		cc  -I. ${CFLAGS} ${OBJ} ${LIBFT} -o ${NAME} -lreadline
 		@echo "${GREEN}executable file: ./${NAME}${default_colour}\n"
-	
+
 clean:
 #		${MAKE} ${LIBFT_DIR} clean
 		@rm -fr ${OBJ_PATH}

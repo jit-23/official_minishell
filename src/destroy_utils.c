@@ -6,12 +6,12 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 18:37:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/15 06:53:45 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/30 08:30:23 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "../includes/env.h"
 #include "../includes/minishell.h"
-#include "../includes/env.h"
 
 int	lst_size_env(t_env *head)
 {
@@ -64,34 +64,14 @@ void	delete_env_lst(t_env *head, int size)
 	}
 }
 
-void	delete_token_lst(t_token *head, int size)
+void	delete_2d_array(char **a)
 {
-	t_token *del;
-	int		i;
+	int	i;
 
-	i = -1;
-	del = (head);
-	while (++i < size)
-	{
-		del = del->next;
-		if (head->token)
-			free(head->token);
-		if (head)
-		{
-			free(head);
-			(head) = del;
-		}
-	}
-}
-
-void delete_2d_array(char **a)
-{
-	int i;
-
-	i  = 0;
+	i = 0;
 	if (!a)
 		return ;
-	while(a[i])
+	while (a[i])
 		free(a[i++]);
 	free(a);
 }
