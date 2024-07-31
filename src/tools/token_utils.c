@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 21:53:08 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/30 00:09:47 by eescalei         ###   ########.fr       */
+/*   Created: 2024/07/29 22:03:12 by eescalei          #+#    #+#             */
+/*   Updated: 2024/07/30 04:25:28 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int ac,char **av ,char **ev)
+t_token	*next_run(t_token *token, int skip)
 {
-	t_shell shell;
-
-	(void)av;
-	while(!(shell.stop_iteration))
+	if (token && skip)
+		token = token->next;
+	while (token && token->type != _EXEC && token->next)
 	{
-		init_shell(&shell, ev);
-		get_prompt(&shell);
-		analise_cmd_line(&shell, shell.cmd_line);
-		execute_line(&shell);	//to do
-		delete_all(&shell);
+		token = token->next;
+		if (token && token->type == _EXEC && token->prev == NULL)
+			;
+		else if (token && token->type == _EXEC && token->next/* && token->prev->type < _END */)
+			token = token->next;
 	}
-	return 0;
+	return (token);
 }

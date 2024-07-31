@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   tools.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/29 21:53:08 by eescalei          #+#    #+#             */
-/*   Updated: 2024/07/30 00:09:47 by eescalei         ###   ########.fr       */
+/*   Created: 2024/07/30 04:19:33 by eescalei          #+#    #+#             */
+/*   Updated: 2024/07/30 04:22:58 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef TOOLS_H
+# define TOOLS_H
 
-int main(int ac,char **av ,char **ev)
-{
-	t_shell shell;
+# include "minishell.h"
 
-	(void)av;
-	while(!(shell.stop_iteration))
-	{
-		init_shell(&shell, ev);
-		get_prompt(&shell);
-		analise_cmd_line(&shell, shell.cmd_line);
-		execute_line(&shell);	//to do
-		delete_all(&shell);
-	}
-	return 0;
-}
+/* 
+**	STRINGS
+ */
+int ft_splitt(char ***strs, char *s, char c);
+int ft_substrr(char ***str, char *s, int start, int len, int j);
+
+/* 
+**	FDS
+ */
+void close_fd(int fd);
+void reset_st_fd(t_shell *shell);
+void close_fd(t_shell *shell);
+void reset_fd(t_shell *shell);
+
+/* 
+**	TOKENS
+ */
+t_token	*next_run(t_token *token, int skip);
+
+
+#endif

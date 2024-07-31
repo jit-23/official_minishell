@@ -36,9 +36,15 @@
 # define ERROR 1
 # define SUCCESS 0
 
+#define _EMPTY	0
 #define _PIPE	1
 #define _EXEC	2
 #define _REDIR	3
+#define _INPUT	4
+#define _APPEND	5
+#define _TRUNC	6
+#define _END	7
+
 
 # define BUFF_SIZE 4096
 # define EXPANSION -36
@@ -72,7 +78,6 @@ typedef enum e_type
 typedef struct s_cmd
 {
 	int type;
-	char **args;
 }t_cmd;
 
 typedef struct s_exec
@@ -124,20 +129,20 @@ typedef struct s_shell
 	t_lexer *token_list;
 	t_lexer *refined_list;
 	t_env *ev;
-	t_env *hiden_ev;
+	// t_env *hiden_ev;
 	t_cmd *root;
 	int		in;
-	int		out;		//need innitialization
-	int		fdin;	//need innitialization
-	int		fdout;	//need innitialization
-	int		pipin;	//need innitialization
-	int		pipout;	//need innitialization
-	int		pid;	//need innitialization
-	int		charge;	//need innitialization
-	int		parent;	//need innitialization
-	int		last;	//need innitialization
-	int		ret;	//need innitialization
-	int		no_exec;	//need innitialization
+	int		out;
+	int		fdin;	
+	int		fdout;	
+	int		pipin;	
+	int		pipout;	
+	int		pid;	
+	int		charge;	// need innitialization
+	int		parent;	// need innitialization
+	int		last;	// need innitialization
+	int		ret;	
+	int		no_exec;
 
 	bool stop_iteration;
 }t_shell;
