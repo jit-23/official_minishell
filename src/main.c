@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/01 20:31:48 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/02 14:59:09 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,35 @@ static void	print_vals(t_env *e, char **ev)
 	}
 }
 
+void get_path_env(t_shell *shell, char **envp)
+{
+	int	i;
+
+	i = 0;
+	// printf("%s", envp[i]);
+	while(envp[i] != NULL)
+	{	
+		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
+		{// check strcmp
+			printf("%s\n", envp[i]);
+			ft_splitt(&(shell->path), envp[i] + 5, ':');
+			break ;
+		}
+		i++;
+	}
+	// printf("%s", shell->path[0]);
+	if(shell->path == NULL)
+	{
+		printf("erro path");// print_error(pipex, "Error getting path\n");
+		return;
+	}
+}
+
 void  init_shell(t_shell *shell, char **ev)
 {
-	shell->env = NULL;				//need innitialization
-	// shell->hiden_ev = NULL;		//need innitialization
+	shell->env = ev;			//need innitialization
 	shell->root = NULL;
-	shell->paths = NULL;
+	get_path_env(shell, ev);
 	shell->prompt = NULL;
 	shell->cmd_line = NULL;
 	shell->token_list = NULL;

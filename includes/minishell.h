@@ -136,10 +136,10 @@ typedef struct s_shell
 	char *prompt;
 	char **env;
 	char **paths;
+	char	**path;
 	t_lexer *token_list;
 	t_lexer *refined_list;
 	t_env *ev;
-	// t_env *hiden_ev;
 	t_cmd *root;
 	int		in;
 	int		out;
@@ -148,11 +148,11 @@ typedef struct s_shell
 	int		pipin;	
 	int		pipout;	
 	int		prev_pipe;
-	int		pid;	
+	int		pid;
 	int		charge;	// need innitialization
 	int		parent;	// need innitialization
 	int		last;	// need innitialization
-	int		ret;	
+	int		ret;	// need innitialization
 	int		no_exec;
 
 	bool stop_iteration;

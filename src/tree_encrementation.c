@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 20:40:26 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/02 10:59:47 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/02 12:24:54 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_cmd *next_run(t_shell *shell)
 	cmd = shell->root;
 	pip1 = NULL;
 	pip2 = NULL;
+	printf("%i", cmd->type);
 	while (cmd)
 	{
 		if(cmd->type == _PIPE)
@@ -52,5 +53,5 @@ t_cmd *next_run(t_shell *shell)
 		if(cmd->type == _EXEC)
 			return(cmd);
 	}
-	return (NULL);
+	return (cmd);
 }

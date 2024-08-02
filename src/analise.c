@@ -61,7 +61,7 @@ void	analise_terminal_input(t_shell *shell, char *cmdline)
 	t_token		*head;
 
 	shell->cmd_line = ft_strtrim(shell->cmd_line, " \t");
-	if (cmdline[0])
+	if (!cmdline[0])
 		return ;
 	place = DEFAULT;
 	parse_tokens(shell, cmdline);
