@@ -6,12 +6,12 @@
 /*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 18:37:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/15 05:47:54 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/07/30 08:30:23 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "../includes/env.h"
 #include "../includes/minishell.h"
-#include "../includes/env.h"
 
 int	lst_size_env(t_env *head)
 {
@@ -64,50 +64,14 @@ void	delete_env_lst(t_env *head, int size)
 	}
 }
 
-void	delete_token_lst(t_token *head, int size)
+void	delete_2d_array(char **a)
 {
-	t_token *del;
-	int		i;
+	int	i;
 
-	i = -1;
-	del = (head);
-	while (++i < size)
-	{
-		printf("-\n");
-		del = del->next;
-		printf("token deleted - %s\n", head->token);
-		if (head->token)
-		{
-			printf("token exist\n");
-			printf("head token - .%s.\n", head->token);
-			free(head->token);
-			
-		}
-		else
-			printf("token DONT exist\n");
-
-		if (head)
-		{
-			printf("a\n");
-			free(head);
-			printf("ab\n");
-			(head) = del;
-			printf("abc\n");
-		}
-		
-		printf("1\n"); 
-
-	}
-}
-
-void delete_2d_array(char **a)
-{
-	int i;
-
-	i  = 0;
+	i = 0;
 	if (!a)
 		return ;
-	while(a[i])
+	while (a[i])
 		free(a[i++]);
 	free(a);
 }

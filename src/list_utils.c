@@ -3,52 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 22:18:06 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/20 15:31:36 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/07/30 08:06:55 by fde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	delete_node(t_shell *mini, t_env *env)
+t_token	*new_node(char *token, t_type type, t_placing placing)
+		// prev e definido na funcao na qual este e chamada
 {
-	if(mini->ev == env && env->next == NULL)
-	{
-		if(mini->ev->prev)
-			mini->ev->prev->next = NULL;
-		free(env->env_value);
-		free(mini->ev->env_name);
-		mini->ev = NULL;
-		return ;
-	}
-	if(env->prev)
-		env->prev->next = env->next;
-	if(env->next)
-		env->next->prev = env->prev;
-	free(env->env_name);
-	free(env);
-}
+	t_token	*new_node;
 
-t_token *new_node(char *token, t_type type, t_placing placing) // prev e definido na funcao na qual este e chamada
-{
-    t_token *new_node;
-	
-    new_node = (t_token *)malloc(sizeof(t_token));
+	new_node = (t_token *)malloc(sizeof(t_token));
 	new_node->token = token;
 	new_node->type = type;
-    new_node->placing = placing;
-    new_node->next = NULL;
-    return (new_node);
+	new_node->placing = placing;
+	new_node->next = NULL;
+	return (new_node);
 }
 
 void	delete_lst(t_token **head, int size)
 {
-	t_token	*del;
+	t_token		*del;
+	int			i;
 
-	auto int i = -1;
- 	del = (*head);
+	i = -1;
+	del = (*head);
 	while (++i < size)
 	{
 		del = del->next;
@@ -88,11 +71,12 @@ int	lst_size(t_token **head)
 	return (size);
 }
 
-void	add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing)
+void	add_to_list(t_lexer *token_list, char *word, t_type type,
+		t_placing placing)
 {
-	t_token *head;
-	t_token *prev;
-	t_token *last;
+	t_token	*head;
+	t_token	*prev;
+	t_token	*last;
 
 	if (!token_list->head)
 	{

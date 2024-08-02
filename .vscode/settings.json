@@ -1,6 +1,7 @@
 {
 	"files.associations": {
-		"readline.h": "c",
-		"typeinfo": "c"
+		"errno.h": "c",
+		"limits.h": "c",
+		"minishell.h": "c"
 	}
 }

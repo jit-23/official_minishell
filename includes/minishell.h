@@ -14,7 +14,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <linux/limits.h>
-#include "env.h"
 
 #define SKIP_SPACES 1 // if im in a space token and i dont know. i skip to the next token
 #define JUMP_TOKEN 2// im in a token and i want to skip to the next token while ignoring the space_token between
@@ -45,6 +44,9 @@
 #define _TRUNC	6
 #define _END	7
 
+#define NONE 0
+#define LEFT 1
+#define RIGHT 2
 
 # define BUFF_SIZE 4096
 # define EXPANSION -36
@@ -74,6 +76,14 @@ typedef enum e_type
 	ENV = '$',
 	PIPE = '|',
 } t_type;
+
+typedef struct s_env
+{
+	char *env_name;
+	char *env_value;
+	struct s_env *next;
+	struct s_env *prev;
+}t_env;
 
 typedef struct s_cmd
 {
@@ -108,8 +118,8 @@ typedef struct s_token
 	t_type		type;
 	int			len;
 	t_placing	placing;
-	t_token		*next;
-	t_token		*prev;
+	struct s_token		*next;
+	struct s_token		*prev;
 }t_token;
 
 typedef struct s_lexer
@@ -133,10 +143,11 @@ typedef struct s_shell
 	t_cmd *root;
 	int		in;
 	int		out;
-	int		fdin;	
-	int		fdout;	
+	int		fdin;
+	int		fdout;
 	int		pipin;	
 	int		pipout;	
+	int		prev_pipe;
 	int		pid;	
 	int		charge;	// need innitialization
 	int		parent;	// need innitialization
@@ -152,14 +163,23 @@ typedef struct s_shell
 /* MAIN. */
 void print_loop(char **s);
 
+int	count_word_size(char *cmdl, int i, int count, t_placing placing);
 /* ANALISE.C */
-void	analise_cmd_line(t_shell *shell, char *cmdline);
-void	parse_tokens(t_shell *shell, char *cmdl);
-void	print_tree(t_cmd *root);
-void	delete_tree(t_cmd *root);
+void	analise_terminal_input(t_shell *shell, char *cmdline);  // 0
+void	parse_tokens(t_shell *shell, char *cmdl); // 0
+void	print_tree(t_cmd *root); // 0
+void	delete_tree(t_cmd *root); // delete_all
+int		get_new_line(t_shell *sh, t_placing place); // token_utils
+void	refine_token_list(t_shell *sh); // 0
+void 	handle_word_token(t_shell *sh); // 2
+void 	handle_token(t_shell *sh, char *token); //2
+void 	/* 2 */add_to_refined_list(t_lexer *token_refined, char *word, t_type type);
+void 	/* 1 */analise_cmdl(t_shell *shell, t_placing place, int i, char *cmdl);
 
-/* ENV TOOLS */
-char *get_env_value(char **env, char *name, int len);
+/* EXECUTE */
+void execute_line(t_shell *shell);
+t_cmd *next_run(t_shell *shell);
+
 
 /* DESTROY_UTILS_ALL.C */
 void	delete_env_lst(t_env *head, int size);
@@ -174,14 +194,28 @@ void delete_all(t_shell *shell);
 void clean_for_next_loop(t_shell *sh);
 
 /* LIST_UTILS.C */
-void	delete_node(t_shell *mini, t_env *env);
 t_token		*ft_lstlast(t_token *head);
 t_token		*new_node(char *token, t_type type, t_placing placing);
 void		delete_lst(t_token **head, int size);
 int			lst_size(t_token **head);
 void		add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing);
 
+/* PIPE UTILS */
+void	set_pipe_fds(t_shell *shell, t_pipe *pip1, t_pipe *pip2, int side);
+
+
+/* FD UTILS */
+void close_fd(int fd);
+void reset_st_fd(t_shell *shell);
+void close_fds(t_shell *shell);
+void reset_fd(t_shell *shell);
+
+/* STRING UTILS */
+int	ft_splitt(char ***strs, char *s, char c);
+
+
 /* TOKEN_UTILS.C */
+//int handle_token(t_shell *sh, t_exec *ex, int i);
 int			get_word(char *cmdl, int i, t_shell *sh, t_placing placing);
 int			get_space(char *cmdl, int i, t_shell *sh, t_placing placing);
 int 		get_quote(t_shell *sh, t_placing *placing, char quote_type);
@@ -208,8 +242,14 @@ void validate_exec(t_exec *executable_node, t_shell *sh);
 char **get_path(t_shell *sh);
 int is_path_env(char *s);
 
+
+
+
 /* INIT_AST.c */
-void    init_AST(t_shell *sh);
+void    init_ast(t_shell *sh);
+t_redir *get_last_redir(t_cmd *sub_root);
+t_redir *handle_redir_type(t_shell *sh);
+t_redir *fill_redir(char *s, int mode, t_shell *sh);
 int 	peek_future_tokens_type(t_token *head, t_type type);
 t_cmd   *pipe_parse(t_shell *sh, t_cmd *left);
 t_cmd 	*exec_parse(t_shell*sh, t_exec *exec_struct);
@@ -223,6 +263,13 @@ t_cmd *parse_redir(t_cmd *branch_root, t_shell *sh);
 /* CHECK_SYNTAX.C */
 int check_syntax(t_shell *sh);
 int check_pipe_sequence(t_token *token);
+
+/* env_expand.c */
+t_env *expand_env(t_shell *shell, char **env);
+t_env *new_env_node(char *env); // prev e definido na funcao na qual este e chamada
+char *get_name(char *env_var);
+char *get_env_value(char *env_var);
+
 
 
 #endif
