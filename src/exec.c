@@ -6,13 +6,46 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 21:58:30 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/02 15:32:12 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/02 19:04:18 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	free_cmd_run(t_shell *shell, t_cmd *cmd) // check if all :after free cmd put it = NULL
+{
+	t_cmd *tmp;
+	t_pipe *pip;
 
+	tmp = shell->root;
+	if(tmp == cmd)
+	{
+		free(cmd); //free cmd prop
+		shell->root = NULL;
+		return ;
+	}
+	if(tmp->type == _PIPE)
+		while (((t_pipe *)tmp)->left && ((t_pipe *)tmp)->left->type == _PIPE)
+			tmp = ((t_pipe *)tmp)->left;
+	pip = (t_pipe *)tmp;
+	if(pip->left != NULL)
+	{
+		cmd = pip->left;
+		free(cmd); //free cmd prop
+		pip->left = NULL;
+		return;
+	}
+	if(pip->left == NULL && pip->right != NULL)
+	{
+		cmd = pip->right;
+		free(cmd);//free cmd prop
+		cmd == shell->root;
+		while ((t_pipe *)(((t_pipe *)tmp)->left) != pip)
+			tmp = ((t_pipe *)tmp)->left;
+		free(pip);
+		((t_pipe *)tmp)->left = NULL;
+	}
+}
 
 char * get_cmds(char **path, char *cmd)
 {
@@ -71,15 +104,15 @@ void execute_line(t_shell *shell)
 	cmd = shell->root;
 	// print_tree(shell->root);
 	// printf("%i", cmd->type); // iniciate pipe->fd[2] = -1
-	/* cmd = next_run(shell); */
-	if(cmd != NULL)
+	while(shell->root != NULL)
 	{
+		next_run(shell);
 		// shell->charge = 1;
 		// shell->parent = 1;
 		// shell->last = 1;
 		//finish  values setup
 		redir_exec(shell, cmd);//TO DO
-		// waitpid(-1, &status, 0);
+		waitpid(-1, &status, 0);
 		// status = WEXITSTATUS(status);
 		// shell->ret = (shell->last == 0) ? status : shell->ret;
 		// if(shell->parent == 0)
@@ -88,7 +121,6 @@ void execute_line(t_shell *shell)
 		// 	exit(shell->ret);
 		// }
 		// shell->no_exec = 0;
-		// // free() free cmd usado e pipe caso right  cmd
-		// next_run(shell);
+		free_cmd_run(shell, cmd); //free cmd usado e pipe caso right  cmd
 	}
 }
