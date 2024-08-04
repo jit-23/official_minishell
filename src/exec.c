@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 21:58:30 by eescalei          #+#    #+#             */
-/*   Updated: 2024/08/02 19:04:18 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/04 05:34:54 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,30 @@
 
 void	free_cmd_run(t_shell *shell, t_cmd *cmd) // check if all :after free cmd put it = NULL
 {
-	t_cmd *tmp;
-	t_pipe *pip;
-
-	tmp = shell->root;
-	if(tmp == cmd)
+	if(cmd == shell->root)						// with valgring loop in exec dont break
 	{
-		free(cmd); //free cmd prop
+		free(cmd);
 		shell->root = NULL;
+	}
+	else if(shell->current_pipe->right == cmd)
+	{
+		if((t_cmd *)shell->current_pipe == shell->root)
+			shell->root = NULL;
+		free(cmd);
+		free(shell->current_pipe);
+		shell->current_pipe = NULL;
+		if(shell->prev_pipe != NULL)
+			shell->prev_pipe->left = NULL;
+		shell->prev_pipe = NULL;
 		return ;
 	}
-	if(tmp->type == _PIPE)
-		while (((t_pipe *)tmp)->left && ((t_pipe *)tmp)->left->type == _PIPE)
-			tmp = ((t_pipe *)tmp)->left;
-	pip = (t_pipe *)tmp;
-	if(pip->left != NULL)
+	else
 	{
-		cmd = pip->left;
-		free(cmd); //free cmd prop
-		pip->left = NULL;
-		return;
-	}
-	if(pip->left == NULL && pip->right != NULL)
-	{
-		cmd = pip->right;
-		free(cmd);//free cmd prop
-		cmd == shell->root;
-		while ((t_pipe *)(((t_pipe *)tmp)->left) != pip)
-			tmp = ((t_pipe *)tmp)->left;
-		free(pip);
-		((t_pipe *)tmp)->left = NULL;
-	}
+		free(cmd);
+		shell->current_pipe->left = NULL;
+		shell->prev_pipe = NULL;
+		shell->current_pipe = NULL;
+	}	
 }
 
 char * get_cmds(char **path, char *cmd)
@@ -56,7 +49,6 @@ char * get_cmds(char **path, char *cmd)
 	i = 0;
 	cmd_path = NULL;
 	sub_path = NULL;
-	printf("%s\n", path[1]);
 	while (path[i] != NULL)
 	{
 		printf("%s\n", cmd);
@@ -64,13 +56,14 @@ char * get_cmds(char **path, char *cmd)
 		cmd_path = ft_strjoin(sub_path, cmd);
 		if(access(cmd_path, X_OK) == 0)
 		{
+			printf("path : %s\n", cmd_path);
 			free(sub_path);
 			return (cmd_path);
 		}
 		free(sub_path);
 		free(cmd_path);
 		i++;
-	}	
+	}
 }
  
 void execute_cmd(t_shell *shell, t_exec *cmd)
@@ -81,8 +74,14 @@ void execute_cmd(t_shell *shell, t_exec *cmd)
 	// if(!shell->path)
 	// 	printf("env path not found");// print_error(pipex, "Error: command not found\n");
 	shell->pid = fork();
-	if(shell->pid == 0)
+	if(shell->pid == 0) // close unecesary fds PS: probably theres a func better suited somewhere
+	{
+		set_pipe_fds(shell,(t_cmd *)cmd);
+		printf("cmd ready to execute\n\n");
 		execve(exec_path, cmd->args, shell->env); // set $? to exit code
+	}	
+	waitpid(shell->pid, &shell->last_status, 0); // wait in func where execute
+	printf("cmd executed\n\n");	
 	// //check if args is null terminated
 	// if(shell->pid != 0)
 	// 	printf(" child ok");
@@ -101,18 +100,18 @@ void execute_line(t_shell *shell)
 	t_cmd *cmd;
 	int status;
 
+	status = -1;
 	cmd = shell->root;
 	// print_tree(shell->root);
 	// printf("%i", cmd->type); // iniciate pipe->fd[2] = -1
 	while(shell->root != NULL)
 	{
-		next_run(shell);
-		// shell->charge = 1;
-		// shell->parent = 1;
-		// shell->last = 1;
+		cmd = next_run(shell);
+		printf("\nnext run: %s\n type: %i\n", ((t_exec *)cmd)->args[0], cmd->type);
 		//finish  values setup
+		open_pipes(shell);
+	//	manage_pipes PS: do it in chld process
 		redir_exec(shell, cmd);//TO DO
-		waitpid(-1, &status, 0);
 		// status = WEXITSTATUS(status);
 		// shell->ret = (shell->last == 0) ? status : shell->ret;
 		// if(shell->parent == 0)

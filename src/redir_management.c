@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_management.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:43:53 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:08:36 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/03 23:49:07 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ t_redir	*handle_redir_type(t_shell *sh)
 		red = fill_redir("<", 0, sh);
 	else if (strncmp(redir_type, ">>", redir_type_len) == 0)
 		red = fill_redir("<", 2, sh);
+	else if (strncmp(redir_type, "<<", redir_type_len) == 0)
+		red = fill_redir("<<", 3, sh);
 	return (red);
 }
 

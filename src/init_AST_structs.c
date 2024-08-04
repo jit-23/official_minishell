@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_AST_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fde-jesu <fde-jesu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 06:42:43 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/07/30 08:04:53 by fde-jesu         ###   ########.fr       */
+/*   Updated: 2024/08/04 04:44:16 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ t_pipe	*init_pipe(void)
 	pipe->type = _PIPE;
 	pipe->left = NULL;
 	pipe->right = NULL;
+	pipe->fd[0] = -1;
+	pipe->fd[1] = -1;
 	return (pipe);
 }
 

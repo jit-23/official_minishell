@@ -6,7 +6,7 @@
 /*   By: eescalei <eescalei@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 17:08:42 by fde-jesu          #+#    #+#             */
-/*   Updated: 2024/08/02 14:59:09 by eescalei         ###   ########.fr       */
+/*   Updated: 2024/08/04 02:23:49 by eescalei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ void get_path_env(t_shell *shell, char **envp)
 	while(envp[i] != NULL)
 	{	
 		if(ft_strncmp(envp[i], "PATH=", 4) == 0)
-		{// check strcmp
-			printf("%s\n", envp[i]);
+		{// 	
 			ft_splitt(&(shell->path), envp[i] + 5, ':');
 			break ;
 		}

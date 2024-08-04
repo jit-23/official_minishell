@@ -99,6 +99,7 @@ typedef struct s_exec
 typedef struct s_pipe
 {
 	int type;
+	int fd[2];
 	t_cmd *left;
 	t_cmd *right;
 }t_pipe;;
@@ -145,9 +146,9 @@ typedef struct s_shell
 	int		out;
 	int		fdin;
 	int		fdout;
-	int		pipin;	
-	int		pipout;	
-	int		prev_pipe;
+	t_pipe	*current_pipe;	
+	t_pipe	*prev_pipe;
+	int		last_status;
 	int		pid;
 	int		charge;	// need innitialization
 	int		parent;	// need innitialization
@@ -201,7 +202,7 @@ int			lst_size(t_token **head);
 void		add_to_list(t_lexer *token_list, char *word, t_type type, t_placing placing);
 
 /* PIPE UTILS */
-void	set_pipe_fds(t_shell *shell, t_pipe *pip1, t_pipe *pip2, int side);
+void	set_pipe_fds(t_shell *shell, t_cmd *cmd);
 
 
 /* FD UTILS */
@@ -209,6 +210,7 @@ void close_fd(int fd);
 void reset_st_fd(t_shell *shell);
 void close_fds(t_shell *shell);
 void reset_fd(t_shell *shell);
+void	open_pipes(t_shell *shell);
 
 /* STRING UTILS */
 int	ft_splitt(char ***strs, char *s, char c);
